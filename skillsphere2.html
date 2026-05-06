@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillSphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f6fb;
+  --bg2: #eef1f8;
+  --surface: #ffffff;
+  --surface2: #f8f9fe;
+  --surface3: #eef1f8;
+  --border: rgba(0,0,0,0.07);
+  --border2: rgba(0,0,0,0.12);
+
+  /* Vivid card palette */
+  --violet:    #7c5cfc;
+  --violet-bg: #f0ecff;
+  --violet-mid:#ede8ff;
+
+  --blue:      #3b82f6;
+  --blue-bg:   #eff6ff;
+  --blue-mid:  #dbeafe;
+
+  --teal:      #0d9488;
+  --teal-bg:   #f0fdfa;
+  --teal-mid:  #ccfbf1;
+
+  --green:     #16a34a;
+  --green-bg:  #f0fdf4;
+  --green-mid: #bbf7d0;
+
+  --amber:     #d97706;
+  --amber-bg:  #fffbeb;
+  --amber-mid: #fde68a;
+
+  --orange:    #ea580c;
+  --orange-bg: #fff7ed;
+  --orange-mid:#fed7aa;
+
+  --pink:      #db2777;
+  --pink-bg:   #fdf2f8;
+  --pink-mid:  #fbcfe8;
+
+  --red:       #dc2626;
+  --red-bg:    #fef2f2;
+  --red-mid:   #fecaca;
+
+  --indigo:    #4f46e5;
+  --indigo-bg: #eef2ff;
+  --indigo-mid:#c7d2fe;
+
+  --cyan:      #0891b2;
+  --cyan-bg:   #ecfeff;
+  --cyan-mid:  #a5f3fc;
+
+  --text:  #111827;
+  --text2: #6b7280;
+  --text3: #9ca3af;
+  --r: 16px;
+  --r-sm: 10px;
+  --r-pill: 50px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1), 0 12px 32px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12), 0 24px 48px rgba(0,0,0,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ═══ APP SHELL ═══ */
+.app { display:flex; height:100vh; max-width:1440px; margin:0 auto; }
+
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+  width: 248px; min-width: 248px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.04);
+}
+
+.logo-wrap { padding:24px 20px 20px; border-bottom:1px solid var(--border); }
+.logo {
+  font-family:'Syne',sans-serif; font-size:22px; font-weight:800;
+  letter-spacing:-0.5px; display:flex; align-items:center; gap:0;
+}
+.logo-skill { color:var(--text); }
+.logo-sphere { color:var(--violet); }
+.logo-dot { color:var(--teal); font-size:30px; line-height:0; margin-bottom:-4px; }
+.logo-sub { font-size:11px; color:var(--text3); margin-top:4px; letter-spacing:0.05em; text-transform:uppercase; }
+
+.user-pill {
+  margin:16px 12px 8px;
+  background:linear-gradient(135deg, var(--violet-bg), var(--blue-bg));
+  border:1px solid var(--violet-mid);
+  border-radius:var(--r); padding:12px;
+  display:flex; align-items:center; gap:10px; cursor:pointer;
+  transition:box-shadow 0.2s;
+}
+.user-pill:hover { box-shadow:var(--shadow); }
+.user-avatar {
+  width:38px; height:38px; border-radius:50%;
+  background:linear-gradient(135deg,var(--violet),var(--teal));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Syne',sans-serif; font-weight:700; font-size:15px; color:white;
+  flex-shrink:0; box-shadow:0 3px 10px rgba(124,92,252,0.35);
+}
+.user-name { font-size:13px; font-weight:700; color:var(--text); }
+.user-score { font-size:11px; color:var(--violet); font-weight:600; }
+
+.nav-section { padding:4px 12px; }
+.nav-label { font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); padding:10px 8px 5px; }
+.nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 10px; border-radius:var(--r-sm);
+  cursor:pointer; font-size:13.5px; font-weight:500;
+  color:var(--text2); transition:all 0.15s; margin-bottom:2px;
+  position:relative;
+}
+.nav-item:hover { background:var(--bg); color:var(--text); }
+.nav-item.active { background:var(--violet-bg); color:var(--violet); font-weight:600; }
+.nav-item.active::before {
+  content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+  width:3px; height:18px; background:var(--violet); border-radius:0 3px 3px 0;
+}
+.nav-icon { width:17px; height:17px; flex-shrink:0; }
+.nav-badge {
+  margin-left:auto; background:var(--red); color:white;
+  font-size:10px; font-weight:700; min-width:18px; height:18px;
+  border-radius:50px; padding:0 5px;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.streak-card {
+  margin:12px; margin-top:auto;
+  background:linear-gradient(135deg,#7c5cfc,#0d9488);
+  border-radius:var(--r); padding:16px; color:white;
+  box-shadow:0 6px 20px rgba(124,92,252,0.3);
+}
+.streak-title { font-size:11px; opacity:0.85; margin-bottom:6px; }
+.streak-val { font-family:'Syne',sans-serif; font-size:30px; font-weight:800; display:flex; align-items:center; gap:6px; }
+.streak-sub { font-size:11px; opacity:0.7; margin-top:4px; }
+
+/* ═══ MAIN PANEL ═══ */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ═══ TOPBAR ═══ */
+.topbar {
+  height:62px; background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center;
+  padding:0 28px; gap:14px;
+  flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.05);
+}
+.page-title { font-family:'Syne',sans-serif; font-size:19px; font-weight:800; color:var(--text); letter-spacing:-0.3px; }
+.search-wrap { flex:1; max-width:400px; margin-left:auto; position:relative; }
+.search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text3); width:15px; height:15px; }
+.search-input {
+  width:100%; background:var(--bg); border:1.5px solid var(--border);
+  border-radius:var(--r-pill); padding:9px 16px 9px 38px;
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px;
+  outline:none; transition:border-color 0.2s;
+}
+.search-input:focus { border-color:var(--violet); background:white; }
+.search-input::placeholder { color:var(--text3); }
+.topbar-actions { display:flex; align-items:center; gap:8px; margin-left:12px; }
+.icon-btn {
+  width:36px; height:36px; border-radius:var(--r-sm);
+  background:var(--bg); border:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all 0.15s; color:var(--text2); position:relative;
+}
+.icon-btn:hover { border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+.icon-btn .badge {
+  position:absolute; top:-4px; right:-4px;
+  width:16px; height:16px; background:var(--red);
+  border-radius:50%; font-size:9px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  color:white; border:2px solid white;
+}
+
+/* ═══ CONTENT ═══ */
+.content { flex:1; overflow-y:auto; padding:24px; background:var(--bg); }
+.content::-webkit-scrollbar { width:4px; }
+.content::-webkit-scrollbar-track { background:transparent; }
+.content::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+/* ═══ SCREENS ═══ */
+.screen { display:none; animation:slideUp 0.3s cubic-bezier(0.16,1,0.3,1); }
+.screen.active { display:block; }
+@keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══ LAYOUT HELPERS ═══ */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.mb-8{margin-bottom:8px} .mb-16{margin-bottom:16px} .mb-20{margin-bottom:20px} .mb-24{margin-bottom:24px}
+.flex{display:flex} .items-center{align-items:center} .justify-between{justify-content:space-between}
+.gap-8{gap:8px} .gap-12{gap:12px} .gap-16{gap:16px}
+
+/* ═══ CORE CARD ═══ */
+.card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--r); padding:20px;
+  box-shadow:var(--shadow);
+}
+.card-hover { cursor:pointer; transition:all 0.2s; }
+.card-hover:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+
+/* ═══ COLORFUL STAT CARDS ═══ */
+.stat-card {
+  border-radius:var(--r); padding:22px 20px;
+  position:relative; overflow:hidden;
+  box-shadow:var(--shadow);
+  border:1.5px solid transparent;
+}
+.stat-card.violet  { background:linear-gradient(145deg,var(--violet-bg),#e8e2ff);  border-color:var(--violet-mid); }
+.stat-card.blue    { background:linear-gradient(145deg,var(--blue-bg),#dbeafe);    border-color:var(--blue-mid); }
+.stat-card.teal    { background:linear-gradient(145deg,var(--teal-bg),#b2f5ea);    border-color:var(--teal-mid); }
+.stat-card.green   { background:linear-gradient(145deg,var(--green-bg),#dcfce7);   border-color:var(--green-mid); }
+.stat-card.amber   { background:linear-gradient(145deg,var(--amber-bg),#fef3c7);   border-color:var(--amber-mid); }
+.stat-card.orange  { background:linear-gradient(145deg,var(--orange-bg),#ffedd5);  border-color:var(--orange-mid); }
+.stat-card.pink    { background:linear-gradient(145deg,var(--pink-bg),#fce7f3);    border-color:var(--pink-mid); }
+.stat-card.red     { background:linear-gradient(145deg,var(--red-bg),#fee2e2);     border-color:var(--red-mid); }
+.stat-card.indigo  { background:linear-gradient(145deg,var(--indigo-bg),#e0e7ff);  border-color:var(--indigo-mid); }
+.stat-card.cyan    { background:linear-gradient(145deg,var(--cyan-bg),#cffafe);    border-color:var(--cyan-mid); }
+
+.stat-icon { width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:14px; background:white; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+.stat-value { font-family:'Syne',sans-serif; font-size:30px; font-weight:800; line-height:1; margin-bottom:4px; }
+.stat-label { font-size:12px; color:var(--text2); margin-bottom:6px; }
+.stat-trend { font-size:11px; font-weight:600; }
+
+.stat-card.violet .stat-value { color:var(--violet); }
+.stat-card.violet .stat-trend { color:var(--violet); }
+.stat-card.blue .stat-value   { color:var(--blue); }
+.stat-card.blue .stat-trend   { color:var(--blue); }
+.stat-card.teal .stat-value   { color:var(--teal); }
+.stat-card.teal .stat-trend   { color:var(--teal); }
+.stat-card.green .stat-value  { color:var(--green); }
+.stat-card.green .stat-trend  { color:var(--green); }
+.stat-card.amber .stat-value  { color:var(--amber); }
+.stat-card.amber .stat-trend  { color:var(--amber); }
+.stat-card.orange .stat-value { color:var(--orange); }
+.stat-card.orange .stat-trend { color:var(--orange); }
+.stat-card.pink .stat-value   { color:var(--pink); }
+.stat-card.pink .stat-trend   { color:var(--pink); }
+.stat-card.red .stat-value    { color:var(--red); }
+.stat-card.red .stat-trend    { color:var(--red); }
+.stat-card.indigo .stat-value { color:var(--indigo); }
+.stat-card.indigo .stat-trend { color:var(--indigo); }
+.stat-card.cyan .stat-value   { color:var(--cyan); }
+.stat-card.cyan .stat-trend   { color:var(--cyan); }
+
+/* ═══ COLORFUL COURSE CARDS ═══ */
+.course-card {
+  border-radius:var(--r); padding:20px;
+  cursor:pointer; transition:all 0.2s;
+  position:relative; overflow:hidden;
+  box-shadow:var(--shadow); border:1.5px solid transparent;
+}
+.course-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.course-card.c-violet { background:linear-gradient(145deg,#f5f2ff,var(--violet-bg)); border-color:var(--violet-mid); }
+.course-card.c-blue   { background:linear-gradient(145deg,#eff6ff,var(--blue-bg));   border-color:var(--blue-mid); }
+.course-card.c-teal   { background:linear-gradient(145deg,#f0fdfa,var(--teal-bg));   border-color:var(--teal-mid); }
+.course-card.c-orange { background:linear-gradient(145deg,#fff7ed,var(--orange-bg)); border-color:var(--orange-mid); }
+.course-card.c-pink   { background:linear-gradient(145deg,#fdf2f8,var(--pink-bg));   border-color:var(--pink-mid); }
+.course-card.c-indigo { background:linear-gradient(145deg,#eef2ff,var(--indigo-bg)); border-color:var(--indigo-mid); }
+.course-card.c-amber  { background:linear-gradient(145deg,#fffbeb,var(--amber-bg));  border-color:var(--amber-mid); }
+.course-card.c-cyan   { background:linear-gradient(145deg,#ecfeff,var(--cyan-bg));   border-color:var(--cyan-mid); }
+
+.course-emoji { width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:14px; background:white; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+.course-name { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; margin-bottom:3px; color:var(--text); }
+.course-meta { font-size:12px; color:var(--text2); margin-bottom:14px; }
+.course-footer { display:flex; align-items:center; justify-content:space-between; font-size:12px; margin-top:8px; }
+
+/* ═══ PROGRESS BARS ═══ */
+.progress-wrap { margin-bottom:12px; }
+.progress-head { display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; font-weight:500; }
+.progress-pct { font-weight:700; }
+.progress-track { height:7px; background:var(--bg2); border-radius:4px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:4px; transition:width 1s cubic-bezier(0.16,1,0.3,1); }
+.pf-violet { background:linear-gradient(90deg,var(--violet),#a78bfa); }
+.pf-teal   { background:linear-gradient(90deg,var(--teal),#34d399); }
+.pf-blue   { background:linear-gradient(90deg,var(--blue),#60a5fa); }
+.pf-amber  { background:linear-gradient(90deg,var(--amber),#fbbf24); }
+.pf-red    { background:linear-gradient(90deg,var(--red),#f87171); }
+.pf-orange { background:linear-gradient(90deg,var(--orange),#fb923c); }
+.pf-pink   { background:linear-gradient(90deg,var(--pink),#f472b6); }
+.pf-green  { background:linear-gradient(90deg,var(--green),#4ade80); }
+.pf-indigo { background:linear-gradient(90deg,var(--indigo),#818cf8); }
+.pf-cyan   { background:linear-gradient(90deg,var(--cyan),#22d3ee); }
+
+/* ═══ CHIPS ═══ */
+.chip { display:inline-flex; align-items:center; gap:4px; padding:4px 11px; border-radius:var(--r-pill); font-size:11px; font-weight:700; }
+.chip.violet { background:var(--violet-mid); color:var(--violet); }
+.chip.blue   { background:var(--blue-mid);   color:var(--blue); }
+.chip.teal   { background:var(--teal-mid);   color:var(--teal); }
+.chip.green  { background:var(--green-mid);  color:var(--green); }
+.chip.amber  { background:var(--amber-mid);  color:var(--amber); }
+.chip.orange { background:var(--orange-mid); color:var(--orange); }
+.chip.pink   { background:var(--pink-mid);   color:var(--pink); }
+.chip.red    { background:var(--red-mid);    color:var(--red); }
+.chip.indigo { background:var(--indigo-mid); color:var(--indigo); }
+.chip.cyan   { background:var(--cyan-mid);   color:var(--cyan); }
+
+/* ═══ BUTTONS ═══ */
+.btn {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:10px 18px; border-radius:var(--r-sm);
+  font-family:'Syne',sans-serif; font-size:13px; font-weight:700;
+  cursor:pointer; border:none; transition:all 0.18s;
+}
+.btn-violet { background:var(--violet); color:white; box-shadow:0 4px 14px rgba(124,92,252,0.35); }
+.btn-violet:hover { background:#6d4eef; transform:translateY(-1px); box-shadow:0 8px 22px rgba(124,92,252,0.4); }
+.btn-teal   { background:var(--teal);   color:white; box-shadow:0 4px 14px rgba(13,148,136,0.35); }
+.btn-teal:hover { background:#0b8278; transform:translateY(-1px); }
+.btn-blue   { background:var(--blue);   color:white; box-shadow:0 4px 14px rgba(59,130,246,0.35); }
+.btn-blue:hover { background:#2563eb; transform:translateY(-1px); }
+.btn-ghost  { background:white; color:var(--text2); border:1.5px solid var(--border); }
+.btn-ghost:hover { border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+.btn-full   { width:100%; justify-content:center; padding:13px; }
+
+/* ═══ INPUTS ═══ */
+.input-group { margin-bottom:16px; }
+.input-label { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text2); margin-bottom:7px; font-weight:600; }
+.input-field {
+  width:100%; background:var(--bg); border:1.5px solid var(--border);
+  border-radius:var(--r-sm); padding:12px 14px;
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px;
+  outline:none; transition:all 0.2s;
+}
+.input-field:focus { border-color:var(--violet); background:white; box-shadow:0 0 0 3px rgba(124,92,252,0.1); }
+.input-field::placeholder { color:var(--text3); }
+
+/* ═══ TABS ═══ */
+.tabs-wrap {
+  display:flex; gap:4px; background:var(--surface);
+  border:1.5px solid var(--border); border-radius:var(--r-sm);
+  padding:4px; margin-bottom:24px; overflow-x:auto;
+  box-shadow:var(--shadow);
+}
+.tab {
+  padding:8px 15px; border-radius:8px;
+  font-size:13px; font-weight:600; cursor:pointer;
+  white-space:nowrap; color:var(--text2); transition:all 0.15s;
+}
+.tab.active { background:var(--violet); color:white; box-shadow:0 2px 8px rgba(124,92,252,0.3); }
+.tab:hover:not(.active) { background:var(--violet-bg); color:var(--violet); }
+
+/* ═══ SECTION HEADERS ═══ */
+.section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.section-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; color:var(--text); }
+.section-link { font-size:13px; color:var(--violet); cursor:pointer; font-weight:600; }
+
+/* ═══ POST CARDS ═══ */
+.post-card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--r); padding:18px; margin-bottom:12px;
+  cursor:pointer; transition:all 0.2s; box-shadow:var(--shadow);
+}
+.post-card:hover { border-color:var(--violet-mid); box-shadow:var(--shadow-md); transform:translateY(-1px); }
+.post-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.post-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; margin-bottom:3px; }
+.post-meta { font-size:11px; color:var(--text2); }
+.post-actions { display:flex; gap:14px; margin-top:12px; border-top:1px solid var(--border); padding-top:10px; }
+.post-action { font-size:12px; color:var(--text2); display:flex; align-items:center; gap:4px; cursor:pointer; transition:color 0.15s; }
+.post-action:hover { color:var(--violet); }
+.post-action.apply { color:var(--teal); font-weight:700; margin-left:auto; }
+
+/* ═══ TEST MODE CARDS ═══ */
+.test-card {
+  border-radius:var(--r); padding:24px 20px;
+  cursor:pointer; transition:all 0.2s;
+  text-align:center; border:1.5px solid transparent;
+  box-shadow:var(--shadow);
+}
+.test-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.test-card.tc-violet { background:linear-gradient(160deg,#f5f2ff,#ede8ff); border-color:var(--violet-mid); }
+.test-card.tc-teal   { background:linear-gradient(160deg,#f0fdfa,#ccfbf1); border-color:var(--teal-mid); }
+.test-card.tc-amber  { background:linear-gradient(160deg,#fffbeb,#fde68a); border-color:var(--amber-mid); }
+.test-card.tc-pink   { background:linear-gradient(160deg,#fdf2f8,#fbcfe8); border-color:var(--pink-mid); }
+.test-icon-big { width:62px; height:62px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 14px; background:white; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.test-mode-name { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; margin-bottom:5px; }
+.test-mode-desc { font-size:12px; color:var(--text2); line-height:1.5; }
+
+/* ═══ RESULT TABLE ═══ */
+.result-head { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text3); padding:10px 16px; border-bottom:1px solid var(--border); display:grid; grid-template-columns:1fr 90px 80px 80px; font-weight:600; background:var(--bg); }
+.result-row { display:grid; grid-template-columns:1fr 90px 80px 80px; padding:13px 16px; font-size:13px; border-bottom:1px solid var(--border); align-items:center; transition:background 0.15s; }
+.result-row:hover { background:var(--bg); }
+.result-row:last-child { border-bottom:none; }
+
+/* ═══ PERFORMANCE ═══ */
+.perf-hero {
+  background:linear-gradient(135deg,#7c5cfc 0%,#0d9488 100%);
+  border-radius:20px; padding:32px;
+  margin-bottom:24px; display:flex; align-items:center; gap:40px;
+  color:white; position:relative; overflow:hidden;
+  box-shadow:0 8px 32px rgba(124,92,252,0.3);
+}
+.perf-hero::before {
+  content:''; position:absolute; top:-60px; right:-60px;
+  width:220px; height:220px;
+  background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 65%);
+}
+.perf-big-score { font-family:'Syne',sans-serif; font-size:72px; font-weight:800; line-height:1; }
+.perf-score-label { font-size:14px; opacity:0.85; margin-top:6px; }
+.perf-divider { width:1px; height:80px; background:rgba(255,255,255,0.25); flex-shrink:0; }
+.perf-stats { display:flex; gap:36px; flex:1; flex-wrap:wrap; }
+.perf-mini { text-align:center; }
+.perf-mini-val { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; margin-bottom:4px; }
+.perf-mini-label { font-size:11px; opacity:0.75; }
+
+/* ═══ AI CARD ═══ */
+.ai-card {
+  background:linear-gradient(145deg,var(--indigo-bg),var(--violet-bg));
+  border:1.5px solid var(--indigo-mid);
+  border-radius:var(--r); padding:22px;
+  box-shadow:var(--shadow);
+}
+.ai-card-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; margin-bottom:16px; color:var(--indigo); }
+.ai-insight { display:flex; gap:10px; font-size:13px; color:#374151; line-height:1.6; margin-bottom:11px; padding-bottom:11px; border-bottom:1px solid rgba(99,102,241,0.1); }
+.ai-insight:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ai-arrow { color:var(--teal); flex-shrink:0; font-weight:800; }
+
+/* ═══ COMMUNITY ═══ */
+.community-layout { display:grid; grid-template-columns:1fr 300px; gap:20px; }
+.comm-post {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--r); padding:20px; margin-bottom:12px;
+  box-shadow:var(--shadow); transition:all 0.2s;
+}
+.comm-post:hover { border-color:var(--violet-mid); box-shadow:var(--shadow-md); }
+.comm-user-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.comm-avatar { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:16px; flex-shrink:0; color:white; }
+.comm-name { font-size:14px; font-weight:700; }
+.comm-role { font-size:11px; color:var(--text2); }
+.comm-time { font-size:11px; color:var(--text3); margin-left:auto; }
+.comm-body { font-size:13.5px; color:#374151; line-height:1.65; }
+.comm-actions { display:flex; gap:12px; margin-top:12px; border-top:1px solid var(--border); padding-top:10px; }
+.comm-action { font-size:12px; color:var(--text2); cursor:pointer; display:flex; align-items:center; gap:4px; }
+.comm-action:hover { color:var(--violet); }
+.comm-action.connect { color:var(--teal); font-weight:700; margin-left:auto; }
+
+/* ═══ LEADERBOARD ═══ */
+.leaderboard-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow); position:sticky; top:0; }
+.lb-header { padding:14px 18px; border-bottom:1px solid var(--border); background:linear-gradient(135deg,var(--violet-bg),var(--blue-bg)); }
+.lb-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:800; color:var(--violet); }
+.lb-row { display:flex; align-items:center; gap:10px; padding:11px 18px; border-bottom:1px solid var(--border); transition:background 0.15s; }
+.lb-row:hover { background:var(--bg); }
+.lb-row:last-child { border-bottom:none; }
+.lb-rank { font-family:'Syne',sans-serif; font-size:13px; font-weight:800; width:22px; color:var(--text3); }
+.lb-rank.gold { color:#d97706; }
+.lb-rank.silver { color:#64748b; }
+.lb-rank.bronze { color:#b45309; }
+.lb-avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; color:white; }
+.lb-info { flex:1; }
+.lb-name { font-size:13px; font-weight:700; }
+.lb-field { font-size:11px; color:var(--text2); }
+.lb-score { font-family:'Syne',sans-serif; font-size:13px; font-weight:800; color:var(--violet); }
+
+/* ═══ CERTIFICATIONS ═══ */
+.cert-card {
+  border-radius:var(--r); padding:22px; cursor:pointer;
+  transition:all 0.2s; position:relative; overflow:hidden;
+  box-shadow:var(--shadow); border:1.5px solid transparent;
+}
+.cert-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+.cert-card.earned  { background:linear-gradient(145deg,var(--teal-bg),#b2f5ea); border-color:var(--teal-mid); }
+.cert-card.pending { background:linear-gradient(145deg,var(--amber-bg),#fef3c7); border-color:var(--amber-mid); }
+.cert-card.locked  { background:var(--bg2); border-color:var(--border); }
+.cert-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:var(--r) var(--r) 0 0; }
+.cert-card.earned::before  { background:linear-gradient(90deg,var(--teal),#34d399); }
+.cert-card.pending::before { background:linear-gradient(90deg,var(--amber),#fbbf24); }
+.cert-card.locked::before  { background:var(--bg2); }
+.cert-icon { font-size:34px; margin-bottom:12px; }
+.cert-name { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; margin-bottom:3px; }
+.cert-org  { font-size:12px; color:var(--text2); margin-bottom:10px; }
+.cert-status { font-size:12px; font-weight:700; }
+.cert-status.earned  { color:var(--teal); }
+.cert-status.pending { color:var(--amber); }
+.cert-status.locked  { color:var(--text3); }
+
+/* ═══ COLLAB CARDS ═══ */
+.collab-card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:var(--r); padding:20px; margin-bottom:12px;
+  transition:all 0.2s; cursor:pointer; box-shadow:var(--shadow);
+}
+.collab-card:hover { border-color:var(--teal-mid); box-shadow:var(--shadow-md); transform:translateY(-1px); }
+.collab-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; margin-bottom:6px; }
+.collab-desc { font-size:13px; color:#374151; line-height:1.6; margin-bottom:12px; }
+.collab-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.collab-tag { padding:3px 10px; border-radius:var(--r-pill); font-size:11px; font-weight:600; background:var(--bg); color:var(--text2); border:1px solid var(--border); }
+.collab-footer { display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--text2); }
+
+/* ═══ RING ═══ */
+.ring-wrap { position:relative; display:inline-flex; align-items:center; justify-content:center; }
+.ring-label { position:absolute; text-align:center; }
+.ring-val { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; display:block; color:white; }
+.ring-sub { font-size:10px; color:rgba(255,255,255,0.75); }
+
+/* ═══ CODE EDITOR ═══ */
+.codezone-editor { background:#1e2432; border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow-md); }
+.editor-topbar { background:#161b28; padding:11px 16px; display:flex; align-items:center; gap:7px; }
+.editor-dot { width:12px; height:12px; border-radius:50%; }
+.editor-code { padding:20px; font-family:'Courier New',monospace; font-size:13px; line-height:1.75; color:#e2e8f0; }
+.code-purple { color:#c084fc; }
+.code-teal { color:#5eead4; }
+.code-green { color:#86efac; }
+.code-yellow { color:#fde68a; }
+.code-gray { color:#6b7280; }
+
+/* ═══ LOGIN ═══ */
+.login-overlay {
+  position:fixed; inset:0;
+  background:linear-gradient(135deg,#f5f3ff 0%,#eff6ff 50%,#f0fdfa 100%);
+  display:flex; align-items:center; justify-content:center; z-index:1000;
+}
+.login-card {
+  background:white; border:1.5px solid var(--border); border-radius:24px;
+  padding:48px 44px; width:440px;
+  box-shadow:0 20px 60px rgba(124,92,252,0.15), 0 4px 16px rgba(0,0,0,0.08);
+  animation:loginIn 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes loginIn { from{opacity:0;transform:scale(0.95) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.login-logo { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; margin-bottom:6px; display:flex; align-items:center; }
+.login-tagline { font-size:13.5px; color:var(--text2); margin-bottom:32px; }
+.login-heading { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; margin-bottom:22px; }
+.login-links { display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:13px; }
+.link { color:var(--violet); cursor:pointer; font-weight:600; }
+.login-footer { text-align:center; font-size:13.5px; color:var(--text2); margin-top:24px; padding-top:22px; border-top:1px solid var(--border); }
+
+/* ═══ INTEREST ═══ */
+.interest-overlay {
+  position:fixed; inset:0;
+  background:linear-gradient(135deg,#f5f3ff,#eff6ff,#f0fdfa);
+  display:none; align-items:center; justify-content:center; z-index:999;
+}
+.interest-card {
+  background:white; border:1.5px solid var(--border); border-radius:24px;
+  padding:48px 44px; width:580px;
+  box-shadow:0 20px 60px rgba(124,92,252,0.15);
+  animation:loginIn 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.interest-heading { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; margin-bottom:6px; }
+.interest-sub { font-size:14px; color:var(--text2); margin-bottom:28px; }
+.interest-chips { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:28px; }
+.int-chip {
+  padding:9px 16px; border-radius:var(--r-pill);
+  border:1.5px solid var(--border); background:var(--bg);
+  font-size:13.5px; font-weight:500; cursor:pointer; transition:all 0.18s; color:var(--text2);
+}
+.int-chip:hover { border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+.int-chip.active { border-color:var(--violet); background:var(--violet-mid); color:var(--violet); font-weight:700; }
+
+/* HOME HERO */
+.home-hero {
+  background:linear-gradient(135deg,#7c5cfc 0%,#3b82f6 50%,#0d9488 100%);
+  border-radius:20px; padding:28px 32px; margin-bottom:22px;
+  display:flex; align-items:center; justify-content:space-between;
+  color:white; position:relative; overflow:hidden;
+  box-shadow:0 8px 30px rgba(124,92,252,0.3);
+}
+.home-hero::before {
+  content:''; position:absolute; top:-50px; right:-50px;
+  width:200px; height:200px;
+  background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 65%);
+}
+.hero-text h1 { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; letter-spacing:-0.3px; margin-bottom:6px; }
+.hero-text p { font-size:14px; opacity:0.88; }
+
+/* text utilities */
+.text-sm { font-size:13px; }
+.text-xs { font-size:11px; }
+.text-muted { color:var(--text2); }
+.font-bold { font-weight:700; }
+
+/* ═══ PITCH BYTE ═══ */
+.pb-feature-card:hover { transform:translateY(-4px) !important; box-shadow:var(--shadow-lg) !important; }
+.pb-panel { animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1); }
+.pb-feature-card.pb-active {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-4px) !important;
+  outline: 2px solid rgba(124,92,252,0.3);
+}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="logo-skill">Skill</span><span class="logo-sphere">Sphere</span><span class="logo-dot">.</span>
+    </div>
+    <p class="login-tagline">AI-powered skill development platform</p>
+    <div class="login-heading">Welcome back 👋</div>
+    <div class="input-group">
+      <div class="input-label">Email address</div>
+      <input class="input-field" type="email" placeholder="you@example.com">
+    </div>
+    <div class="input-group">
+      <div class="input-label">Password</div>
+      <input class="input-field" type="password" placeholder="••••••••">
+    </div>
+    <button class="btn btn-violet btn-full" onclick="showInterest()">Login to SkillSphere →</button>
+    <div class="login-links">
+      <span class="text-sm text-muted">No account? <span class="link" onclick="showInterest()">Sign up free</span></span>
+      <span class="link text-sm">Forgot password?</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ INTEREST ════ -->
+<div class="interest-overlay" id="interestOverlay">
+  <div class="interest-card">
+    <div class="login-logo" style="font-size:22px;margin-bottom:8px">
+      <span class="logo-skill">Skill</span><span class="logo-sphere">Sphere</span><span class="logo-dot">.</span>
+    </div>
+    <div class="interest-heading">What's your field? 🎯</div>
+    <p class="interest-sub">Pick your interests — we'll personalize everything for you</p>
+    <div class="interest-chips">
+      <div class="int-chip active" onclick="this.classList.toggle('active')">💻 Programming</div>
+      <div class="int-chip" onclick="this.classList.toggle('active')">📊 Data Science</div>
+      <div class="int-chip active" onclick="this.classList.toggle('active')">🤖 AI / ML</div>
+      <div class="int-chip" onclick="this.classList.toggle('active')">🎨 UI/UX Design</div>
+      <div class="int-chip" onclick="this.classList.toggle('active')">☁️ Cloud & DevOps</div>
+      <div class="int-chip" onclick="this.classList.toggle('active')">🔐 Cybersecurity</div>
+      <div class="int-chip active" onclick="this.classList.toggle('active')">🧮 DSA & Algorithms</div>
+      <div class="int-chip" onclick="this.classList.toggle('active')">📝 Technical Blogging</div>
+      <div class="int-chip" onclick="this.classList.toggle('active')">🚀 Startups & Product</div>
+      <div class="int-chip" onclick="this.classList.toggle('active')">📱 Mobile Development</div>
+    </div>
+    <button class="btn btn-violet btn-full" onclick="enterApp()">Continue to SkillSphere →</button>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div class="app" id="mainApp" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-wrap">
+      <div class="logo">
+        <span class="logo-skill">Skill</span><span class="logo-sphere">Sphere</span><span class="logo-dot">.</span>
+      </div>
+      <div class="logo-sub">Skill Development Platform</div>
+    </div>
+
+    <div class="user-pill">
+      <div class="user-avatar">A</div>
+      <div>
+        <div class="user-name">Alex Kumar</div>
+        <div class="user-score">⚡ Skill Score: 847</div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <div class="nav-item active" onclick="showScreen('home',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home Feed <span class="nav-badge">3</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('training',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Training
+      </div>
+      <div class="nav-item" onclick="showScreen('testing',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Testing
+      </div>
+      <div class="nav-item" onclick="showScreen('pitchbyte',this)" style="position:relative">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Pitch Byte
+        <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:linear-gradient(135deg,var(--pink),var(--violet));color:white;font-size:9px;font-weight:800;padding:2px 6px;border-radius:50px;letter-spacing:0.05em">NEW</span>
+      </div>
+      <div class="nav-item" onclick="showScreen('performance',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Performance
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Social</div>
+      <div class="nav-item" onclick="showScreen('community',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Community
+      </div>
+      <div class="nav-item" onclick="showScreen('collaborate',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Collaborate
+      </div>
+      <div class="nav-item" onclick="showScreen('jobs',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Pitch & Jobs
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Achievements</div>
+      <div class="nav-item" onclick="showScreen('certifications',this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        Certifications
+      </div>
+    </div>
+
+    <div class="streak-card">
+      <div class="streak-title">🔥 Learning Streak</div>
+      <div class="streak-val">12 <span style="font-size:18px">days</span></div>
+      <div class="streak-sub">Keep it up! Best: 21 days</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">Home Feed</div>
+      <div class="search-wrap">
+        <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" placeholder="Search courses, people, posts...">
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="badge">3</span>
+        </div>
+        <div class="icon-btn">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ HOME ══ -->
+      <div class="screen active" id="screen-home">
+        <div class="home-hero mb-20">
+          <div class="hero-text">
+            <h1>Good morning, Alex 👋</h1>
+            <p>Your personalized learning journey continues. <strong>12-day streak!</strong> 🔥</p>
+            <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+              <span class="chip violet">💻 Programming</span>
+              <span class="chip teal">🤖 AI/ML</span>
+              <span class="chip cyan">🧮 DSA</span>
+            </div>
+          </div>
+          <div class="ring-wrap">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="10"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="white" stroke-width="10"
+                stroke-dasharray="314" stroke-dashoffset="79" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="ring-label">
+              <span class="ring-val">847</span>
+              <span class="ring-sub">Score</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colorful stat cards -->
+        <div class="grid-4 mb-20">
+          <div class="stat-card violet">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value">88%</div>
+            <div class="stat-label">Avg Test Score</div>
+            <div class="stat-trend">↑ +6% this month</div>
+          </div>
+          <div class="stat-card teal">
+            <div class="stat-icon">📚</div>
+            <div class="stat-value">5</div>
+            <div class="stat-label">Active Courses</div>
+            <div class="stat-trend">2 due this week</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value">3</div>
+            <div class="stat-label">Certifications</div>
+            <div class="stat-trend">1 in progress</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-value">3</div>
+            <div class="stat-label">Weak Areas</div>
+            <div class="stat-trend">Needs attention</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="gap:20px">
+          <div>
+            <div class="section-head">
+              <div class="section-title">📌 Job & Skill Posts</div>
+              <span class="section-link">View all →</span>
+            </div>
+            <div class="post-card">
+              <div class="post-top">
+                <div><div class="post-title">Backend Engineer (Python) — Remote</div><div class="post-meta">TechCorp Inc. · 2h ago · 34 applicants</div></div>
+                <span class="chip teal">🏢 Job</span>
+              </div>
+              <p class="text-sm text-muted" style="line-height:1.6">3+ yrs Python, REST APIs, PostgreSQL. Competitive pay + equity.</p>
+              <div class="post-actions"><span class="post-action">👍 28</span><span class="post-action">💬 12</span><span class="post-action apply">Apply Now →</span></div>
+            </div>
+            <div class="post-card">
+              <div class="post-top">
+                <div><div class="post-title">How I cracked FAANG with DSA in 60 days 🚀</div><div class="post-meta">by Priya Kumar · 5h ago</div></div>
+                <span class="chip violet">📝 Post</span>
+              </div>
+              <p class="text-sm text-muted" style="line-height:1.6">My full roadmap, resources and daily schedule. Thread inside!</p>
+              <div class="post-actions"><span class="post-action">👍 248</span><span class="post-action">💬 42</span><span class="post-action apply">Read →</span></div>
+            </div>
+            <div class="post-card">
+              <div class="post-top">
+                <div><div class="post-title">Co-founder needed — AI-powered EdTech SaaS</div><div class="post-meta">by Rahul Mehta · 1d ago</div></div>
+                <span class="chip amber">🤝 Collab</span>
+              </div>
+              <p class="text-sm text-muted" style="line-height:1.6">Building B2B skill assessment. Need React + Node.js. Equity-based.</p>
+              <div class="post-actions"><span class="post-action">👍 34</span><span class="post-action">💬 9</span><span class="post-action apply">Connect →</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-head"><div class="section-title">📈 Your Progress</div></div>
+            <div class="card mb-16">
+              <div class="progress-wrap">
+                <div class="progress-head"><span>Python</span><span class="progress-pct" style="color:var(--violet)">88%</span></div>
+                <div class="progress-track"><div class="progress-fill pf-violet" style="width:88%"></div></div>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-head"><span>DSA & Algorithms</span><span class="progress-pct" style="color:var(--teal)">72%</span></div>
+                <div class="progress-track"><div class="progress-fill pf-teal" style="width:72%"></div></div>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-head"><span>Java</span><span class="progress-pct" style="color:var(--blue)">55%</span></div>
+                <div class="progress-track"><div class="progress-fill pf-blue" style="width:55%"></div></div>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-head"><span>System Design</span><span class="progress-pct" style="color:var(--red)">40%</span></div>
+                <div class="progress-track"><div class="progress-fill pf-red" style="width:40%"></div></div>
+              </div>
+              <div class="progress-wrap" style="margin-bottom:0">
+                <div class="progress-head"><span>Aptitude</span><span class="progress-pct" style="color:var(--indigo)">81%</span></div>
+                <div class="progress-track"><div class="progress-fill pf-indigo" style="width:81%"></div></div>
+              </div>
+            </div>
+            <div class="ai-card">
+              <div class="ai-card-title">🤖 AI Insights</div>
+              <div class="ai-insight"><span class="ai-arrow">→</span>System Design at 40% — focus 30 min/day for 2 weeks to unlock SDE-2 roles.</div>
+              <div class="ai-insight"><span class="ai-arrow">→</span>Python score qualifies you for 5 open positions this week.</div>
+              <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>One Global Test away from Top 10% globally.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ TRAINING ══ -->
+      <div class="screen" id="screen-training">
+        <div class="tabs-wrap" id="training-tabs">
+          <div class="tab active" onclick="switchTrainingTab('programming',this)">💻 Programming</div>
+          <div class="tab" onclick="switchTrainingTab('codezone',this)">⌨️ CodeZone</div>
+          <div class="tab" onclick="switchTrainingTab('assignments',this)">📋 Assignments</div>
+          <div class="tab" onclick="switchTrainingTab('blogs',this)">📝 Blogs</div>
+          <div class="tab" onclick="switchTrainingTab('plugins',this)">🔌 Plug-ins</div>
+          <div class="tab" onclick="switchTrainingTab('projects',this)">🚀 Projects</div>
+        </div>
+
+        <!-- PROGRAMMING TAB -->
+        <div id="ttab-programming">
+          <div class="section-head mb-16">
+            <div class="section-title">Available Languages & Courses</div>
+            <button class="btn btn-violet" style="padding:9px 16px;font-size:12px">+ Enroll New</button>
+          </div>
+          <div class="grid-4 mb-24">
+            <div class="course-card c-violet">
+              <div class="course-emoji">🐍</div>
+              <div class="course-name">Python</div>
+              <div class="course-meta">Intermediate · 24 modules · 18h</div>
+              <div class="progress-track"><div class="progress-fill pf-violet" style="width:62%"></div></div>
+              <div class="course-footer"><span class="text-muted">62% done</span><span class="chip violet" style="font-size:10px">Active</span></div>
+            </div>
+            <div class="course-card c-blue">
+              <div class="course-emoji">☕</div>
+              <div class="course-name">Java</div>
+              <div class="course-meta">Beginner · 18 modules · 14h</div>
+              <div class="progress-track"><div class="progress-fill pf-blue" style="width:30%"></div></div>
+              <div class="course-footer"><span class="text-muted">30% done</span><span class="chip blue" style="font-size:10px">Active</span></div>
+            </div>
+            <div class="course-card c-teal">
+              <div class="course-emoji">🦫</div>
+              <div class="course-name">Golang</div>
+              <div class="course-meta">Advanced · 20 modules · 22h</div>
+              <div class="progress-track"><div class="progress-fill pf-teal" style="width:10%"></div></div>
+              <div class="course-footer"><span class="text-muted">10% done</span><span class="chip teal" style="font-size:10px">New</span></div>
+            </div>
+            <div class="course-card c-orange">
+              <div class="course-emoji">⚙️</div>
+              <div class="course-name">C / C++</div>
+              <div class="course-meta">Beginner · 14 modules · 10h</div>
+              <div class="progress-track" style="background:#fed7aa"><div class="progress-fill pf-orange" style="width:0%"></div></div>
+              <div class="course-footer"><span class="text-muted">Not started</span><span class="chip orange" style="font-size:10px">Start</span></div>
+            </div>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div class="card">
+              <div class="section-title" style="margin-bottom:14px">📈 Learning Roadmap</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--green-bg);border-radius:10px;border:1.5px solid var(--green-mid)"><div style="font-size:16px">✅</div><div><div style="font-size:13px;font-weight:700;color:var(--green)">Variables, Data Types, Loops</div><div class="text-xs text-muted">Completed</div></div></div>
+                <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--violet-bg);border-radius:10px;border:1.5px solid var(--violet-mid)"><div style="font-size:16px">🔄</div><div><div style="font-size:13px;font-weight:700;color:var(--violet)">Functions & OOP</div><div class="text-xs text-muted">In Progress · 62%</div></div></div>
+                <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--bg);border-radius:10px;border:1.5px solid var(--border);opacity:0.6"><div style="font-size:16px">🔒</div><div><div style="font-size:13px;font-weight:600;color:var(--text2)">File Handling & APIs</div><div class="text-xs text-muted">Locked</div></div></div>
+                <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--bg);border-radius:10px;border:1.5px solid var(--border);opacity:0.6"><div style="font-size:16px">🔒</div><div><div style="font-size:13px;font-weight:600;color:var(--text2)">Advanced Python & Frameworks</div><div class="text-xs text-muted">Locked</div></div></div>
+              </div>
+            </div>
+            <div class="ai-card">
+              <div class="ai-card-title">🤖 AI Course Recommendations</div>
+              <div class="ai-insight"><span class="ai-arrow">→</span>Complete Python OOP module — it unlocks Django & Flask frameworks.</div>
+              <div class="ai-insight"><span class="ai-arrow">→</span>Java is 30% done — 4 more modules to unlock Java Certification.</div>
+              <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Try C fundamentals to strengthen your DSA problem-solving base.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CODEZONE TAB -->
+        <div id="ttab-codezone" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">⌨️ CodeZone — Live Coding Environment</div>
+            <div style="display:flex;gap:8px">
+              <span class="chip teal">Daily Streak: 12🔥</span>
+              <span class="chip violet">342 Problems Solved</span>
+            </div>
+          </div>
+          <div class="grid-2" style="gap:20px;margin-bottom:20px">
+            <div>
+              <div class="codezone-editor" style="margin-bottom:14px">
+                <div class="editor-topbar">
+                  <div class="editor-dot" style="background:#ff6b6b"></div>
+                  <div class="editor-dot" style="background:#fbbf24"></div>
+                  <div class="editor-dot" style="background:#34d399"></div>
+                  <span style="font-size:12px;color:#94a3b8;margin-left:8px">solution.py</span>
+                  <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+                    <span style="font-size:11px;color:#6b7280;background:#2d3748;padding:2px 8px;border-radius:4px">Python 3.11</span>
+                    <span style="font-size:11px;color:#6b7280">▶ Run</span>
+                  </div>
+                </div>
+                <div class="editor-code">
+<span class="code-gray"># Two Sum — LeetCode #1</span>
+<span class="code-purple">def</span> <span class="code-teal">twoSum</span>(nums, target):
+    seen = {}
+    <span class="code-purple">for</span> i, num <span class="code-purple">in</span> <span class="code-teal">enumerate</span>(nums):
+        diff = target - num
+        <span class="code-purple">if</span> diff <span class="code-purple">in</span> seen:
+            <span class="code-purple">return</span> [seen[diff], i]
+        seen[num] = i
+<span class="code-gray"># Time: O(n) · Space: O(n)</span>
+                </div>
+              </div>
+              <div style="background:#1e2432;border-radius:var(--r-sm);padding:14px">
+                <div style="font-size:11px;color:#6b7280;margin-bottom:6px">OUTPUT</div>
+                <div style="font-family:'Courier New',monospace;font-size:13px;color:#86efac">✓ Test case 1 passed: [0, 1]</div>
+                <div style="font-family:'Courier New',monospace;font-size:13px;color:#86efac">✓ Test case 2 passed: [1, 2]</div>
+                <div style="font-family:'Courier New',monospace;font-size:13px;color:#fde68a;margin-top:4px">Runtime: 52ms · Memory: 14.2MB</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;margin-bottom:12px">🎯 Problem Categories</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <span style="padding:6px 12px;background:var(--violet-bg);border:1.5px solid var(--violet-mid);border-radius:50px;font-size:12px;font-weight:600;color:var(--violet);cursor:pointer">Arrays (48)</span>
+                  <span style="padding:6px 12px;background:var(--teal-bg);border:1.5px solid var(--teal-mid);border-radius:50px;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer">Trees (32)</span>
+                  <span style="padding:6px 12px;background:var(--blue-bg);border:1.5px solid var(--blue-mid);border-radius:50px;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer">Graphs (28)</span>
+                  <span style="padding:6px 12px;background:var(--amber-bg);border:1.5px solid var(--amber-mid);border-radius:50px;font-size:12px;font-weight:600;color:var(--amber);cursor:pointer">DP (40)</span>
+                  <span style="padding:6px 12px;background:var(--pink-bg);border:1.5px solid var(--pink-mid);border-radius:50px;font-size:12px;font-weight:600;color:var(--pink);cursor:pointer">Strings (25)</span>
+                  <span style="padding:6px 12px;background:var(--orange-bg);border:1.5px solid var(--orange-mid);border-radius:50px;font-size:12px;font-weight:600;color:var(--orange);cursor:pointer">Sorting (18)</span>
+                </div>
+              </div>
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;margin-bottom:12px">🏆 Today's Challenges</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="padding:11px;background:var(--teal-bg);border-radius:var(--r-sm);border:1.5px solid var(--teal-mid);cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+                    <div><div style="font-size:13px;font-weight:700">Two Sum</div><div class="text-xs text-muted">Arrays · Hash Maps · 47% accept</div></div><span class="chip teal">Easy</span>
+                  </div>
+                  <div style="padding:11px;background:var(--amber-bg);border-radius:var(--r-sm);border:1.5px solid var(--amber-mid);cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+                    <div><div style="font-size:13px;font-weight:700">LRU Cache</div><div class="text-xs text-muted">Design · Linked List · 41% accept</div></div><span class="chip amber">Medium</span>
+                  </div>
+                  <div style="padding:11px;background:var(--red-bg);border-radius:var(--r-sm);border:1.5px solid var(--red-mid);cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+                    <div><div style="font-size:13px;font-weight:700">Word Ladder II</div><div class="text-xs text-muted">BFS · Graph · 29% accept</div></div><span class="chip red">Hard</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div style="background:var(--green-bg);border:1.5px solid var(--green-mid);border-radius:var(--r-sm);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green)">342</div><div style="font-size:11px;color:var(--text2)">Solved</div></div>
+                <div style="background:var(--violet-bg);border:1.5px solid var(--violet-mid);border-radius:var(--r-sm);padding:12px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--violet)">#78</div><div style="font-size:11px;color:var(--text2)">Global Rank</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ASSIGNMENTS TAB -->
+        <div id="ttab-assignments" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">📋 Assignments</div>
+            <div style="display:flex;gap:8px"><span class="chip amber">3 Due Soon</span><span class="chip green">5 Submitted</span></div>
+          </div>
+          <div class="grid-2" style="gap:20px;margin-bottom:20px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="background:linear-gradient(145deg,var(--red-bg),#fee2e2);border:1.5px solid var(--red-mid);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">Build a REST API with FastAPI</div><span class="chip red">Due Today</span></div>
+                <div style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.5">Create CRUD endpoints for a user management system with JWT authentication.</div>
+                <div style="display:flex;gap:8px"><span class="chip violet">Python</span><span class="chip blue">FastAPI</span><span class="chip teal">JWT</span></div>
+                <div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-violet" style="padding:8px 14px;font-size:12px">Submit</button><button class="btn btn-ghost" style="padding:8px 14px;font-size:12px">View Brief</button></div>
+              </div>
+              <div style="background:linear-gradient(145deg,var(--amber-bg),#fef3c7);border:1.5px solid var(--amber-mid);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">Binary Tree Traversal Problems</div><span class="chip amber">Due Mar 2</span></div>
+                <div style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.5">Implement inorder, preorder, postorder traversal with iterative solutions.</div>
+                <div style="display:flex;gap:8px"><span class="chip teal">DSA</span><span class="chip blue">Trees</span></div>
+                <div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-violet" style="padding:8px 14px;font-size:12px">Submit</button><button class="btn btn-ghost" style="padding:8px 14px;font-size:12px">View Brief</button></div>
+              </div>
+              <div style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">Design a URL Shortener</div><span class="chip blue">Due Mar 5</span></div>
+                <div style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.5">System design assignment — handle 1M requests/day with Redis caching.</div>
+                <div style="display:flex;gap:8px"><span class="chip indigo">System Design</span><span class="chip teal">Redis</span></div>
+                <div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-violet" style="padding:8px 14px;font-size:12px">Submit</button><button class="btn btn-ghost" style="padding:8px 14px;font-size:12px">View Brief</button></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px">✅ Submitted Assignments</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--green-bg);border-radius:8px;border:1px solid var(--green-mid)"><span style="font-size:13px;font-weight:600">Python OOP Project</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--green)">92/100</span><span class="chip green" style="font-size:10px">Graded</span></div></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--teal-bg);border-radius:8px;border:1px solid var(--teal-mid)"><span style="font-size:13px;font-weight:600">Sorting Algorithms</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--teal)">88/100</span><span class="chip teal" style="font-size:10px">Graded</span></div></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--violet-bg);border-radius:8px;border:1px solid var(--violet-mid)"><span style="font-size:13px;font-weight:600">Linked List Problems</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--violet)">95/100</span><span class="chip violet" style="font-size:10px">Graded</span></div></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--blue-bg);border-radius:8px;border:1px solid var(--blue-mid)"><span style="font-size:13px;font-weight:600">Hash Map Problems</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--blue)">79/100</span><span class="chip blue" style="font-size:10px">Graded</span></div></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--amber-bg);border-radius:8px;border:1px solid var(--amber-mid)"><span style="font-size:13px;font-weight:600">Recursion Practice</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--amber)">⏳</span><span class="chip amber" style="font-size:10px">Pending</span></div></div>
+                </div>
+              </div>
+              <div class="ai-card">
+                <div class="ai-card-title">🤖 Assignment AI Tips</div>
+                <div class="ai-insight"><span class="ai-arrow">→</span>FastAPI assignment is due today — AI can auto-generate boilerplate to get you started.</div>
+                <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Your avg assignment score is 88.5/100 — top 8% of all learners.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BLOGS TAB -->
+        <div id="ttab-blogs" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">📝 Blogs & Articles</div>
+            <button class="btn btn-violet" style="padding:9px 16px;font-size:12px">✏️ Write Blog</button>
+          </div>
+          <div class="grid-3" style="gap:16px;margin-bottom:20px">
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
+              <div style="height:8px;background:linear-gradient(90deg,var(--violet),#a78bfa)"></div>
+              <div style="padding:18px"><span class="chip violet" style="margin-bottom:10px;display:inline-block">Python</span><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;line-height:1.4">10 Python Tricks Every Developer Should Know in 2025</div><div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5">From list comprehensions to generators — level up your Python code quality.</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>by Priya Kumar · 8 min read</span><span>❤️ 248</span></div></div>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
+              <div style="height:8px;background:linear-gradient(90deg,var(--blue),#60a5fa)"></div>
+              <div style="padding:18px"><span class="chip blue" style="margin-bottom:10px;display:inline-block">System Design</span><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;line-height:1.4">How to Design a Scalable URL Shortener from Scratch</div><div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5">Complete HLD walkthrough — load balancers, databases, caching strategies.</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>by Rahul Mehta · 12 min read</span><span>❤️ 189</span></div></div>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
+              <div style="height:8px;background:linear-gradient(90deg,var(--teal),#34d399)"></div>
+              <div style="padding:18px"><span class="chip teal" style="margin-bottom:10px;display:inline-block">DSA</span><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;line-height:1.4">Dynamic Programming: From Beginner to Advanced in 30 Days</div><div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5">The only DP guide you'll ever need — with patterns, templates and 50 problems.</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>by Sneha Iyer · 15 min read</span><span>❤️ 412</span></div></div>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
+              <div style="height:8px;background:linear-gradient(90deg,var(--amber),#fbbf24)"></div>
+              <div style="padding:18px"><span class="chip amber" style="margin-bottom:10px;display:inline-block">Career</span><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;line-height:1.4">FAANG Interview Prep: My 60-Day Roadmap That Got 3 Offers</div><div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5">Daily schedule, resources and mental framework that actually works.</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>by Alex Kumar · 10 min read</span><span>❤️ 623</span></div></div>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
+              <div style="height:8px;background:linear-gradient(90deg,var(--pink),#f472b6)"></div>
+              <div style="padding:18px"><span class="chip pink" style="margin-bottom:10px;display:inline-block">AI/ML</span><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;line-height:1.4">Building Your First LLM App with LangChain + Python</div><div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5">Step-by-step tutorial to build a RAG chatbot from scratch.</div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>by Sneha Iyer · 18 min read</span><span>❤️ 534</span></div></div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--indigo-bg),var(--indigo-mid));border:1.5px solid var(--indigo-mid);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;box-shadow:var(--shadow)">
+              <div style="font-size:28px;margin-bottom:8px">✏️</div>
+              <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--indigo);margin-bottom:6px">Write Your First Blog</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Share your knowledge with 50,000+ learners</div>
+              <button class="btn" style="background:var(--indigo);color:white;padding:8px 16px;font-size:12px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Start Writing →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PLUGINS TAB -->
+        <div id="ttab-plugins" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">🔌 Plug-ins & Integrations</div>
+            <span class="chip violet">12 Available · 3 Active</span>
+          </div>
+          <div class="grid-3" style="gap:16px;margin-bottom:20px">
+            <div style="background:var(--surface);border:1.5px solid var(--green-mid);background:var(--green-bg);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:44px;height:44px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">🐙</div><div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">GitHub</div><div style="font-size:11px;color:var(--green);font-weight:600">✓ Connected</div></div></div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Sync your code submissions directly to GitHub repositories and track commits.</div>
+              <button class="btn btn-ghost" style="width:100%;justify-content:center;padding:8px;font-size:12px">Manage</button>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--blue-mid);background:var(--blue-bg);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:44px;height:44px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">🔵</div><div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">VS Code</div><div style="font-size:11px;color:var(--blue);font-weight:600">✓ Connected</div></div></div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Code directly in VS Code and sync with SkillSphere's problem set in real-time.</div>
+              <button class="btn btn-ghost" style="width:100%;justify-content:center;padding:8px;font-size:12px">Manage</button>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--violet-mid);background:var(--violet-bg);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:44px;height:44px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">📊</div><div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">Notion</div><div style="font-size:11px;color:var(--violet);font-weight:600">✓ Connected</div></div></div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Export your learning notes, progress reports and study plans to Notion.</div>
+              <button class="btn btn-ghost" style="width:100%;justify-content:center;padding:8px;font-size:12px">Manage</button>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);opacity:0.7">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:44px;height:44px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px">💼</div><div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">LinkedIn</div><div style="font-size:11px;color:var(--text3)">Not Connected</div></div></div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Auto-share certifications and achievements to your LinkedIn profile.</div>
+              <button class="btn btn-violet" style="width:100%;justify-content:center;padding:8px;font-size:12px">Connect</button>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);opacity:0.7">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:44px;height:44px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px">📅</div><div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">Google Calendar</div><div style="font-size:11px;color:var(--text3)">Not Connected</div></div></div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Sync your study schedule and assignment deadlines with Google Calendar.</div>
+              <button class="btn btn-violet" style="width:100%;justify-content:center;padding:8px;font-size:12px">Connect</button>
+            </div>
+            <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);opacity:0.7">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="width:44px;height:44px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px">💬</div><div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800">Slack</div><div style="font-size:11px;color:var(--text3)">Not Connected</div></div></div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Get daily streak reminders, assignment alerts and leaderboard updates on Slack.</div>
+              <button class="btn btn-violet" style="width:100%;justify-content:center;padding:8px;font-size:12px">Connect</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJECTS TAB -->
+        <div id="ttab-projects" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">🚀 Real-World Projects</div>
+            <button class="btn btn-violet" style="padding:9px 16px;font-size:12px">+ New Project</button>
+          </div>
+          <div class="grid-2" style="gap:16px;margin-bottom:20px">
+            <div style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border:1.5px solid var(--violet-mid);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800">🛒 E-Commerce REST API</div><span class="chip violet">In Progress</span></div>
+              <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Full-stack project — FastAPI backend, PostgreSQL DB, Redis caching, Docker deployment.</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--violet)">Python</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--violet)">FastAPI</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--violet)">Docker</span></div>
+              <div class="progress-track" style="height:8px;margin-bottom:8px"><div class="progress-fill pf-violet" style="width:65%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2)"><span>65% complete</span><button class="btn btn-violet" style="padding:6px 12px;font-size:11px">Continue →</button></div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--teal-bg),var(--teal-mid));border:1.5px solid var(--teal-mid);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800">💬 Real-Time Chat App</div><span class="chip teal">Completed</span></div>
+              <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">WebSocket-based chat with rooms, online presence, message history and file sharing.</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--teal)">Node.js</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--teal)">Socket.io</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--teal)">MongoDB</span></div>
+              <div class="progress-track" style="height:8px;margin-bottom:8px"><div class="progress-fill pf-teal" style="width:100%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2)"><span>100% complete ✓</span><button class="btn btn-teal" style="padding:6px 12px;font-size:11px">View on GitHub →</button></div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800">🤖 AI Resume Analyzer</div><span class="chip blue">New</span></div>
+              <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Use GPT-4 to parse and score resumes against job descriptions with detailed feedback.</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--blue)">Python</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--blue)">OpenAI</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--blue)">React</span></div>
+              <div class="progress-track" style="height:8px;margin-bottom:8px"><div class="progress-fill pf-blue" style="width:0%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2)"><span>Not started</span><button class="btn btn-blue" style="padding:6px 12px;font-size:11px">Start Project →</button></div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--amber-bg),#fef3c7);border:1.5px solid var(--amber-mid);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800">📊 Stock Dashboard</div><span class="chip amber">Mentored</span></div>
+              <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Real-time stock tracker with charts, alerts and portfolio management. Guided project.</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--amber)">React</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--amber)">Node.js</span><span style="background:white;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--amber)">Chart.js</span></div>
+              <div class="progress-track" style="height:8px;margin-bottom:8px"><div class="progress-fill pf-amber" style="width:0%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2)"><span>Not started</span><button class="btn" style="background:var(--amber);color:white;padding:6px 12px;font-size:11px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Start Project →</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ TESTING ══ -->
+      <div class="screen" id="screen-testing">
+        <div class="tabs-wrap" id="testing-tabs">
+          <div class="tab active" onclick="switchTestingTab('aptizone',this)">🎯 AptiZone</div>
+          <div class="tab" onclick="switchTestingTab('yourtest',this)">📝 Your Test</div>
+          <div class="tab" onclick="switchTestingTab('aibooster',this)">🤖 AI Booster</div>
+          <div class="tab" onclick="switchTestingTab('globaltest',this)">🌐 Global Test</div>
+        </div>
+
+        <!-- APTIZONE TAB -->
+        <div id="testab-aptizone">
+          <div class="section-head mb-16">
+            <div class="section-title">🎯 AptiZone — Aptitude Test Bank</div>
+            <span class="chip violet">1,200+ Questions</span>
+          </div>
+          <div class="grid-4 mb-20">
+            <div style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border:1.5px solid var(--violet-mid);border-radius:var(--r);padding:18px;text-align:center;box-shadow:var(--shadow)"><div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--violet)">88%</div><div style="font-size:12px;color:var(--text2)">Avg Score</div></div>
+            <div style="background:linear-gradient(145deg,var(--teal-bg),var(--teal-mid));border:1.5px solid var(--teal-mid);border-radius:var(--r);padding:18px;text-align:center;box-shadow:var(--shadow)"><div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--teal)">14</div><div style="font-size:12px;color:var(--text2)">Tests Taken</div></div>
+            <div style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:18px;text-align:center;box-shadow:var(--shadow)"><div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--blue)">#47</div><div style="font-size:12px;color:var(--text2)">Current Rank</div></div>
+            <div style="background:linear-gradient(145deg,var(--amber-bg),#fef3c7);border:1.5px solid var(--amber-mid);border-radius:var(--r);padding:18px;text-align:center;box-shadow:var(--shadow)"><div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--amber)">92%</div><div style="font-size:12px;color:var(--text2)">Best Score</div></div>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div>
+              <div class="section-title" style="margin-bottom:14px">📂 Test Categories</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="background:linear-gradient(145deg,var(--violet-bg),#ede8ff);border:1.5px solid var(--violet-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform=''">
+                  <div style="width:40px;height:40px;border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🔢</div>
+                  <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--violet)">Quantitative Aptitude</div><div class="text-xs text-muted">Number theory, percentages, time & work — 320 questions</div></div>
+                  <button class="btn btn-violet" style="padding:7px 12px;font-size:11px;flex-shrink:0">Practice</button>
+                </div>
+                <div style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform=''">
+                  <div style="width:40px;height:40px;border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🧩</div>
+                  <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--blue)">Logical Reasoning</div><div class="text-xs text-muted">Puzzles, sequences, blood relations — 280 questions</div></div>
+                  <button class="btn btn-blue" style="padding:7px 12px;font-size:11px;flex-shrink:0">Practice</button>
+                </div>
+                <div style="background:linear-gradient(145deg,var(--teal-bg),var(--teal-mid));border:1.5px solid var(--teal-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform=''">
+                  <div style="width:40px;height:40px;border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📖</div>
+                  <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--teal)">Verbal Ability</div><div class="text-xs text-muted">Reading, grammar, vocabulary — 310 questions</div></div>
+                  <button class="btn btn-teal" style="padding:7px 12px;font-size:11px;flex-shrink:0">Practice</button>
+                </div>
+                <div style="background:linear-gradient(145deg,var(--amber-bg),#fef3c7);border:1.5px solid var(--amber-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.2s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform=''">
+                  <div style="width:40px;height:40px;border-radius:10px;background:white;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🏢</div>
+                  <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--amber)">Company-Specific</div><div class="text-xs text-muted">TCS, Infosys, Wipro, Amazon pattern questions — 290</div></div>
+                  <button class="btn" style="background:var(--amber);color:white;padding:7px 12px;font-size:11px;flex-shrink:0;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Practice</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="section-title" style="margin-bottom:14px">📊 Recent Attempts</div>
+              <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+                <div class="result-head"><span>Category</span><span>Score</span><span>Time</span><span>Date</span></div>
+                <div class="result-row"><span>Quantitative</span><span style="color:var(--green);font-weight:800">92%</span><span style="color:var(--text2)">18 min</span><span class="text-muted">Feb 25</span></div>
+                <div class="result-row"><span>Logical</span><span style="color:var(--blue);font-weight:800">88%</span><span style="color:var(--text2)">22 min</span><span class="text-muted">Feb 22</span></div>
+                <div class="result-row"><span>Verbal</span><span style="color:var(--amber);font-weight:800">79%</span><span style="color:var(--text2)">20 min</span><span class="text-muted">Feb 20</span></div>
+                <div class="result-row"><span>Company TCS</span><span style="color:var(--violet);font-weight:800">85%</span><span style="color:var(--text2)">35 min</span><span class="text-muted">Feb 18</span></div>
+              </div>
+              <div class="ai-card">
+                <div class="ai-card-title">🤖 AptiZone AI Coaching</div>
+                <div class="ai-insight"><span class="ai-arrow">→</span>Verbal ability at 79% — practice 10 reading comprehension questions daily.</div>
+                <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Your Quant score of 92% is FAANG-level. Try Amazon pattern next.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- YOUR TEST TAB -->
+        <div id="testab-yourtest" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">📝 Your Test — Custom Quiz Builder</div>
+            <span class="chip teal">Build in 30 seconds</span>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div class="card">
+              <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:16px">⚙️ Create New Quiz</div>
+              <div style="margin-bottom:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:7px;font-weight:600">Topic / Subject</div><input class="input-field" placeholder="e.g. Python OOP, Binary Trees, SQL..." style="background:var(--bg)"></div>
+              <div style="margin-bottom:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:7px;font-weight:600">Difficulty Level</div>
+                <div style="display:flex;gap:8px">
+                  <div style="flex:1;padding:10px;background:var(--green-bg);border:1.5px solid var(--green-mid);border-radius:var(--r-sm);text-align:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--green)">Easy</div>
+                  <div style="flex:1;padding:10px;background:var(--amber-bg);border:1.5px solid var(--amber-mid);border-radius:var(--r-sm);text-align:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--amber)">Medium</div>
+                  <div style="flex:1;padding:10px;background:var(--red-bg);border:1.5px solid var(--red-mid);border-radius:var(--r-sm);text-align:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--red)">Hard</div>
+                </div>
+              </div>
+              <div style="margin-bottom:14px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:7px;font-weight:600">Number of Questions</div>
+                <div style="display:flex;gap:8px">
+                  <div style="flex:1;padding:10px;background:var(--violet-bg);border:1.5px solid var(--violet-mid);border-radius:var(--r-sm);text-align:center;cursor:pointer;font-size:13px;font-weight:800;color:var(--violet)">10</div>
+                  <div style="flex:1;padding:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm);text-align:center;cursor:pointer;font-size:13px;font-weight:800;color:var(--text2)">20</div>
+                  <div style="flex:1;padding:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm);text-align:center;cursor:pointer;font-size:13px;font-weight:800;color:var(--text2)">30</div>
+                  <div style="flex:1;padding:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm);text-align:center;cursor:pointer;font-size:13px;font-weight:800;color:var(--text2)">50</div>
+                </div>
+              </div>
+              <div style="margin-bottom:16px"><div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:7px;font-weight:600">Time Limit</div><input class="input-field" placeholder="e.g. 15 minutes" style="background:var(--bg)"></div>
+              <button class="btn btn-violet btn-full">🤖 Generate Quiz →</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:12px">📁 My Saved Quizzes</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 12px;background:var(--violet-bg);border-radius:10px;border:1.5px solid var(--violet-mid)"><div><div style="font-size:13px;font-weight:700">Python OOP — 20 Qs</div><div class="text-xs text-muted">Medium · Last score: 85%</div></div><button class="btn btn-violet" style="padding:6px 12px;font-size:11px">Retake</button></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 12px;background:var(--teal-bg);border-radius:10px;border:1.5px solid var(--teal-mid)"><div><div style="font-size:13px;font-weight:700">SQL Queries — 15 Qs</div><div class="text-xs text-muted">Easy · Last score: 93%</div></div><button class="btn btn-teal" style="padding:6px 12px;font-size:11px">Retake</button></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 12px;background:var(--blue-bg);border-radius:10px;border:1.5px solid var(--blue-mid)"><div><div style="font-size:13px;font-weight:700">Recursion & DP — 30 Qs</div><div class="text-xs text-muted">Hard · Last score: 62%</div></div><button class="btn btn-blue" style="padding:6px 12px;font-size:11px">Retake</button></div>
+                </div>
+              </div>
+              <div style="background:linear-gradient(145deg,var(--teal-bg),var(--teal-mid));border:1.5px solid var(--teal-mid);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--teal);margin-bottom:8px">🎯 Quick Start Templates</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="background:white;padding:5px 12px;border-radius:50px;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer">Python Basics</span>
+                  <span style="background:white;padding:5px 12px;border-radius:50px;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer">DSA Level 1</span>
+                  <span style="background:white;padding:5px 12px;border-radius:50px;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer">DBMS Concepts</span>
+                  <span style="background:white;padding:5px 12px;border-radius:50px;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer">OS Fundamentals</span>
+                  <span style="background:white;padding:5px 12px;border-radius:50px;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer">CN Basics</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI BOOSTER TAB -->
+        <div id="testab-aibooster" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">🤖 AI Booster — Adaptive Intelligence Tests</div>
+            <span class="chip amber">Adjusts to Your Level</span>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="background:linear-gradient(135deg,var(--amber),#d97706);border-radius:var(--r);padding:24px;color:white;box-shadow:0 8px 24px rgba(217,119,6,0.3)">
+                <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:6px">How AI Booster Works</div>
+                <div style="font-size:13px;opacity:0.9;line-height:1.7;margin-bottom:16px">AI analyses your weak areas from past tests and generates a personalized question set that targets exactly where you need improvement — getting harder as you improve.</div>
+                <div style="display:flex;gap:10px">
+                  <div style="background:rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">3</div><div style="font-size:10px;opacity:0.8">Weak Areas</div></div>
+                  <div style="background:rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">↑18%</div><div style="font-size:10px;opacity:0.8">Improvement</div></div>
+                  <div style="background:rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;text-align:center"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">8</div><div style="font-size:10px;opacity:0.8">Sessions Done</div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px">🎯 AI-Identified Weak Areas</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="padding:12px;background:var(--red-bg);border:1.5px solid var(--red-mid);border-radius:10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:var(--red)">System Design</div><div class="text-xs text-muted">40% — Critical gap</div></div><button class="btn" style="background:var(--red);color:white;padding:7px 12px;font-size:11px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Boost Now</button></div>
+                  <div style="padding:12px;background:var(--amber-bg);border:1.5px solid var(--amber-mid);border-radius:10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:var(--amber)">Java Collections</div><div class="text-xs text-muted">55% — Needs work</div></div><button class="btn" style="background:var(--amber);color:white;padding:7px 12px;font-size:11px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Boost Now</button></div>
+                  <div style="padding:12px;background:var(--orange-bg);border:1.5px solid var(--orange-mid);border-radius:10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:700;color:var(--orange)">Graph Algorithms</div><div class="text-xs text-muted">62% — Getting there</div></div><button class="btn" style="background:var(--orange);color:white;padding:7px 12px;font-size:11px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Boost Now</button></div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px">📈 AI Learning Curve</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div><div class="progress-head"><span style="font-size:12px">System Design</span><span class="progress-pct" style="color:var(--red)">40% → 58%</span></div><div class="progress-track" style="height:8px"><div class="progress-fill pf-red" style="width:58%"></div></div><div style="font-size:10px;color:var(--green);margin-top:3px">↑ +18% after 3 sessions</div></div>
+                  <div><div class="progress-head"><span style="font-size:12px">Java Collections</span><span class="progress-pct" style="color:var(--amber)">55% → 67%</span></div><div class="progress-track" style="height:8px"><div class="progress-fill pf-amber" style="width:67%"></div></div><div style="font-size:10px;color:var(--green);margin-top:3px">↑ +12% after 2 sessions</div></div>
+                  <div><div class="progress-head"><span style="font-size:12px">Graph Algorithms</span><span class="progress-pct" style="color:var(--orange)">62% → 71%</span></div><div class="progress-track" style="height:8px"><div class="progress-fill pf-orange" style="width:71%"></div></div><div style="font-size:10px;color:var(--green);margin-top:3px">↑ +9% after 3 sessions</div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px">⚡ Quick AI Boost Session</div>
+                <div style="margin-bottom:12px"><div style="font-size:12px;color:var(--text2);margin-bottom:8px">Select focus area:</div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <span style="padding:7px 14px;background:var(--red-bg);border:1.5px solid var(--red-mid);border-radius:50px;font-size:12px;font-weight:700;color:var(--red);cursor:pointer">System Design</span>
+                    <span style="padding:7px 14px;background:var(--amber-bg);border:1.5px solid var(--amber-mid);border-radius:50px;font-size:12px;font-weight:700;color:var(--amber);cursor:pointer">Java</span>
+                    <span style="padding:7px 14px;background:var(--orange-bg);border:1.5px solid var(--orange-mid);border-radius:50px;font-size:12px;font-weight:700;color:var(--orange);cursor:pointer">Graphs</span>
+                    <span style="padding:7px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:50px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer">Custom</span>
+                  </div>
+                </div>
+                <button class="btn btn-full" style="background:linear-gradient(135deg,var(--amber),#f59e0b);color:white;border:none;padding:13px;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;border-radius:var(--r-sm);cursor:pointer;box-shadow:0 4px 14px rgba(217,119,6,0.3)">🤖 Generate AI Boost Session →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GLOBAL TEST TAB -->
+        <div id="testab-globaltest" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">🌐 Global Test — Compete Worldwide</div>
+            <div style="display:flex;gap:8px"><span class="chip pink">50,000+ Participants</span><span class="chip green">Live Now</span></div>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="background:linear-gradient(135deg,var(--pink),#be185d);border-radius:var(--r);padding:24px;color:white;box-shadow:0 8px 24px rgba(219,39,119,0.3);position:relative;overflow:hidden">
+                <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 70%)"></div>
+                <div style="font-size:11px;opacity:0.8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Your Global Standing</div>
+                <div style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;line-height:1">#4,231</div>
+                <div style="font-size:13px;opacity:0.85;margin-top:4px">Top 15% · Out of 28,000 participants</div>
+                <div style="display:flex;gap:10px;margin-top:14px">
+                  <div style="background:rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;text-align:center;flex:1"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">847</div><div style="font-size:10px;opacity:0.8">Score</div></div>
+                  <div style="background:rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;text-align:center;flex:1"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">12</div><div style="font-size:10px;opacity:0.8">Contests</div></div>
+                  <div style="background:rgba(255,255,255,0.2);border-radius:10px;padding:10px 14px;text-align:center;flex:1"><div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800">3🏆</div><div style="font-size:10px;opacity:0.8">Top 10%</div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px">🔴 Live Contests</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="background:linear-gradient(145deg,var(--red-bg),#fee2e2);border:1.5px solid var(--red-mid);border-radius:10px;padding:14px">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:800">Python Sprint #47</span><span class="chip red" style="font-size:10px">🔴 Live</span></div>
+                    <div class="text-xs text-muted" style="margin-bottom:10px">1,240 participants · 23 min remaining</div>
+                    <button class="btn" style="background:var(--red);color:white;width:100%;justify-content:center;padding:9px;font-size:12px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Join Now →</button>
+                  </div>
+                  <div style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border:1.5px solid var(--violet-mid);border-radius:10px;padding:14px">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:800">DSA World Cup — Round 3</span><span class="chip violet" style="font-size:10px">⏰ 2h</span></div>
+                    <div class="text-xs text-muted" style="margin-bottom:10px">Starts in 2 hours · 8,400 registered</div>
+                    <button class="btn btn-violet" style="width:100%;justify-content:center;padding:9px;font-size:12px">Register →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px">🏆 Global Leaderboard</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px;background:linear-gradient(145deg,#fffbeb,#fef3c7);border-radius:10px;border:1px solid var(--amber-mid)"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#d97706;width:24px">1</span><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#d97706,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">A</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Arjun Singh</div><div class="text-xs text-muted">Full Stack · India</div></div><span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--amber)">1,240</span></div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:10px"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#64748b;width:24px">2</span><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--violet),#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">P</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Priya Kumar</div><div class="text-xs text-muted">Python · India</div></div><span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--violet)">1,180</span></div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:10px"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#b45309;width:24px">3</span><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#34d399);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">R</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Rahul Mehta</div><div class="text-xs text-muted">Backend · India</div></div><span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--teal)">1,054</span></div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--violet-bg);border-left:3px solid var(--violet);border-radius:10px;border-top-left-radius:0;border-bottom-left-radius:0"><span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--violet);width:24px">You</span><div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--teal));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">A</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Alex Kumar</div><div class="text-xs text-muted">Python · India · Rank #4,231</div></div><span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--violet)">847</span></div>
+                </div>
+              </div>
+              <div class="ai-card">
+                <div class="ai-card-title">🤖 Global Performance Insights</div>
+                <div class="ai-insight"><span class="ai-arrow">→</span>You're 3 tests away from Top 10% globally. Join the DSA World Cup to surge ahead.</div>
+                <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Your Python speed rank is #89 globally — impressive! Try Live Python Sprint #47.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PITCH BYTE ══ -->
+      <div class="screen" id="screen-pitchbyte">
+
+        <!-- Hero Banner -->
+        <div style="background:linear-gradient(135deg,#db2777 0%,#7c5cfc 50%,#3b82f6 100%);border-radius:20px;padding:28px 32px;margin-bottom:24px;color:white;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(219,39,119,0.3)">
+          <div style="position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 65%)"></div>
+          <div style="position:absolute;bottom:-40px;left:15%;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,0.1),transparent 65%)"></div>
+          <div style="font-size:11px;opacity:0.75;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;font-weight:600">Communication Suite</div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px">Pitch Byte 🎤</h2>
+          <p style="font-size:14px;opacity:0.88;max-width:500px;line-height:1.6">AI-powered communication lab. Master interviews, develop your personality, detect AI in content, and refine your vocal presence — all in one place.</p>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+            <span style="background:rgba(255,255,255,0.2);color:white;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700">🤖 AI-Powered</span>
+            <span style="background:rgba(255,255,255,0.2);color:white;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700">🎙️ Voice Analysis</span>
+            <span style="background:rgba(255,255,255,0.2);color:white;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700">📊 Real-time Feedback</span>
+          </div>
+        </div>
+
+        <!-- 4 Feature Cards -->
+        <div class="grid-4 mb-24">
+
+          <!-- Mock Interview -->
+          <div onclick="showPitchTab('mock-interview')" class="pb-feature-card" id="ftab-mock-interview" style="background:linear-gradient(145deg,#fdf2f8,#fbcfe8);border:1.5px solid #fbcfe8;border-radius:var(--r);padding:22px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow);position:relative;overflow:hidden">
+            <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(219,39,119,0.15),transparent 70%)"></div>
+            <div style="width:52px;height:52px;border-radius:14px;background:white;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;box-shadow:0 3px 10px rgba(219,39,119,0.2)">🎤</div>
+            <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--pink);margin-bottom:5px">Mock Interview</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.5">AI-simulated HR & technical interviews with real-time scoring</div>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--pink)">Start Session <span>→</span></div>
+          </div>
+
+          <!-- Personality Development -->
+          <div onclick="showPitchTab('personality')" class="pb-feature-card" id="ftab-personality" style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border:1.5px solid var(--violet-mid);border-radius:var(--r);padding:22px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow);position:relative;overflow:hidden">
+            <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(124,92,252,0.15),transparent 70%)"></div>
+            <div style="width:52px;height:52px;border-radius:14px;background:white;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;box-shadow:0 3px 10px rgba(124,92,252,0.2)">🌟</div>
+            <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--violet);margin-bottom:5px">Personality Dev</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.5">Build confidence, communication & leadership through guided modules</div>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--violet)">Explore Modules <span>→</span></div>
+          </div>
+
+          <!-- AI Detector -->
+          <div onclick="showPitchTab('ai-detector')" class="pb-feature-card" id="ftab-ai-detector" style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:22px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow);position:relative;overflow:hidden">
+            <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(59,130,246,0.15),transparent 70%)"></div>
+            <div style="width:52px;height:52px;border-radius:14px;background:white;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;box-shadow:0 3px 10px rgba(59,130,246,0.2)">🔍</div>
+            <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--blue);margin-bottom:5px">AI Detector</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.5">Detect AI-generated content in essays, cover letters & assignments</div>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--blue)">Analyze Text <span>→</span></div>
+          </div>
+
+          <!-- Vocal Shift -->
+          <div onclick="showPitchTab('vocal-shift')" class="pb-feature-card" id="ftab-vocal-shift" style="background:linear-gradient(145deg,var(--teal-bg),var(--teal-mid));border:1.5px solid var(--teal-mid);border-radius:var(--r);padding:22px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow);position:relative;overflow:hidden">
+            <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(13,148,136,0.15),transparent 70%)"></div>
+            <div style="width:52px;height:52px;border-radius:14px;background:white;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;box-shadow:0 3px 10px rgba(13,148,136,0.2)">🎙️</div>
+            <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--teal);margin-bottom:5px">Vocal Shift</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.5">Analyze & improve your tone, pace, clarity and pronunciation live</div>
+            <div style="margin-top:14px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--teal)">Record Voice <span>→</span></div>
+          </div>
+        </div>
+
+        <!-- ─── MOCK INTERVIEW PANEL ─── -->
+        <div id="panel-mock-interview" class="pb-panel">
+          <div class="section-head mb-16">
+            <div class="section-title">🎤 Mock Interview Studio</div>
+            <div style="display:flex;gap:8px">
+              <span class="chip pink">HR Round</span>
+              <span class="chip violet">Technical</span>
+              <span class="chip blue">System Design</span>
+            </div>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div>
+              <!-- Interview types -->
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+                <div style="background:linear-gradient(145deg,#fdf2f8,#fce7f3);border:1.5px solid var(--pink-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 8px rgba(219,39,119,0.15);flex-shrink:0">👔</div>
+                  <div style="flex:1">
+                    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--pink);margin-bottom:2px">HR Round</div>
+                    <div style="font-size:12px;color:var(--text2)">Behavioural, situational & culture-fit questions</div>
+                  </div>
+                  <button class="btn" style="background:var(--pink);color:white;padding:8px 14px;font-size:12px;box-shadow:0 3px 10px rgba(219,39,119,0.3);border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;flex-shrink:0">Start →</button>
+                </div>
+                <div style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border:1.5px solid var(--violet-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 8px rgba(124,92,252,0.15);flex-shrink:0">💻</div>
+                  <div style="flex:1">
+                    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--violet);margin-bottom:2px">Technical Round</div>
+                    <div style="font-size:12px;color:var(--text2)">DSA, coding problems & language-specific questions</div>
+                  </div>
+                  <button class="btn btn-violet" style="padding:8px 14px;font-size:12px;flex-shrink:0">Start →</button>
+                </div>
+                <div style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 8px rgba(59,130,246,0.15);flex-shrink:0">🏗️</div>
+                  <div style="flex:1">
+                    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--blue);margin-bottom:2px">System Design Round</div>
+                    <div style="font-size:12px;color:var(--text2)">Design scalable systems — FAANG-style questions</div>
+                  </div>
+                  <button class="btn btn-blue" style="padding:8px 14px;font-size:12px;flex-shrink:0">Start →</button>
+                </div>
+                <div style="background:linear-gradient(145deg,var(--amber-bg),#fef3c7);border:1.5px solid var(--amber-mid);border-radius:var(--r);padding:16px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                  <div style="width:44px;height:44px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 8px rgba(217,119,6,0.15);flex-shrink:0">⚡</div>
+                  <div style="flex:1">
+                    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--amber);margin-bottom:2px">Speed Round</div>
+                    <div style="font-size:12px;color:var(--text2)">Rapid-fire questions — 30 sec per answer</div>
+                  </div>
+                  <button class="btn" style="background:var(--amber);color:white;padding:8px 14px;font-size:12px;flex-shrink:0;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">Start →</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <!-- Past interview results -->
+              <div class="card" style="margin-bottom:16px">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:14px;color:var(--text)">📊 Past Interview Scores</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div>
+                    <div class="progress-head"><span style="font-size:12px">HR Round</span><span class="progress-pct" style="color:var(--pink)">82%</span></div>
+                    <div class="progress-track" style="height:8px"><div class="progress-fill pf-pink" style="width:82%"></div></div>
+                  </div>
+                  <div>
+                    <div class="progress-head"><span style="font-size:12px">Technical</span><span class="progress-pct" style="color:var(--violet)">76%</span></div>
+                    <div class="progress-track" style="height:8px"><div class="progress-fill pf-violet" style="width:76%"></div></div>
+                  </div>
+                  <div>
+                    <div class="progress-head"><span style="font-size:12px">System Design</span><span class="progress-pct" style="color:var(--blue)">54%</span></div>
+                    <div class="progress-track" style="height:8px"><div class="progress-fill pf-blue" style="width:54%"></div></div>
+                  </div>
+                  <div>
+                    <div class="progress-head"><span style="font-size:12px">Communication</span><span class="progress-pct" style="color:var(--teal)">90%</span></div>
+                    <div class="progress-track" style="height:8px"><div class="progress-fill pf-teal" style="width:90%"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="ai-card">
+                <div class="ai-card-title">🤖 AI Feedback</div>
+                <div class="ai-insight"><span class="ai-arrow">→</span>Strong communication skills (90%). Your answers are clear and structured well.</div>
+                <div class="ai-insight"><span class="ai-arrow">→</span>System Design needs work — practice LLD/HLD questions before your next interview.</div>
+                <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Try the STAR method for behavioural questions to improve HR score further.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── PERSONALITY DEVELOPMENT PANEL ─── -->
+        <div id="panel-personality" class="pb-panel" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">🌟 Personality Development</div>
+            <span class="chip violet">12 Modules Available</span>
+          </div>
+          <div class="grid-3" style="gap:16px;margin-bottom:20px">
+            <div style="background:linear-gradient(145deg,#fdf2f8,#fce7f3);border:1.5px solid var(--pink-mid);border-radius:var(--r);padding:20px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size:28px;margin-bottom:10px">💪</div>
+              <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--pink);margin-bottom:4px">Confidence Building</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Overcome stage fright & build unshakeable self-belief</div>
+              <div class="progress-track"><div class="progress-fill pf-pink" style="width:60%"></div></div>
+              <div style="font-size:11px;color:var(--text2);margin-top:5px">60% complete</div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border:1.5px solid var(--violet-mid);border-radius:var(--r);padding:20px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size:28px;margin-bottom:10px">🗣️</div>
+              <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--violet);margin-bottom:4px">Public Speaking</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Master the art of addressing crowds with impact</div>
+              <div class="progress-track"><div class="progress-fill pf-violet" style="width:35%"></div></div>
+              <div style="font-size:11px;color:var(--text2);margin-top:5px">35% complete</div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:20px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size:28px;margin-bottom:10px">🧠</div>
+              <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--blue);margin-bottom:4px">Emotional Intelligence</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Understand emotions & build stronger relationships</div>
+              <div class="progress-track"><div class="progress-fill pf-blue" style="width:20%"></div></div>
+              <div style="font-size:11px;color:var(--text2);margin-top:5px">20% complete</div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--teal-bg),var(--teal-mid));border:1.5px solid var(--teal-mid);border-radius:var(--r);padding:20px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size:28px;margin-bottom:10px">🤝</div>
+              <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--teal);margin-bottom:4px">Leadership Skills</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Lead with influence, not authority</div>
+              <div class="progress-track"><div class="progress-fill pf-teal" style="width:0%"></div></div>
+              <div style="font-size:11px;color:var(--text2);margin-top:5px">Not started</div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--amber-bg),#fef3c7);border:1.5px solid var(--amber-mid);border-radius:var(--r);padding:20px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size:28px;margin-bottom:10px">⚡</div>
+              <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--amber);margin-bottom:4px">Critical Thinking</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Solve problems faster with structured reasoning</div>
+              <div class="progress-track"><div class="progress-fill pf-amber" style="width:0%"></div></div>
+              <div style="font-size:11px;color:var(--text2);margin-top:5px">Not started</div>
+            </div>
+            <div style="background:linear-gradient(145deg,var(--orange-bg),var(--orange-mid));border:1.5px solid var(--orange-mid);border-radius:var(--r);padding:20px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+              <div style="font-size:28px;margin-bottom:10px">📈</div>
+              <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--orange);margin-bottom:4px">Growth Mindset</div>
+              <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Rewire your brain for continuous learning & resilience</div>
+              <div class="progress-track"><div class="progress-fill pf-orange" style="width:0%"></div></div>
+              <div style="font-size:11px;color:var(--text2);margin-top:5px">Not started</div>
+            </div>
+          </div>
+          <div class="ai-card">
+            <div class="ai-card-title">🤖 Personality AI Insights</div>
+            <div class="grid-2" style="gap:14px">
+              <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Your confidence score has improved 24% in the last 2 weeks based on session analysis.</div>
+              <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Start Leadership Skills — it aligns directly with your SDE-1 job goals.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── AI DETECTOR PANEL ─── -->
+        <div id="panel-ai-detector" class="pb-panel" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">🔍 AI Content Detector</div>
+            <span class="chip blue">Powered by SkillSphere AI</span>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:12px">Paste or type content to analyse</div>
+                <textarea style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;resize:vertical;min-height:160px;line-height:1.7;transition:border-color 0.2s" placeholder="Paste your essay, cover letter, blog post or assignment here..." onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'">The implementation of artificial intelligence in modern educational systems represents a significant paradigm shift in how we approach learning and assessment. These sophisticated algorithms enable personalized learning pathways...</textarea>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <button class="btn btn-blue btn-full" onclick="runAIDetector()">🔍 Analyse Content</button>
+                  <button class="btn btn-ghost" style="flex-shrink:0;padding:10px 16px" onclick="document.querySelector('textarea').value=''">Clear</button>
+                </div>
+              </div>
+              <div class="card" style="background:var(--blue-bg);border-color:var(--blue-mid)">
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--blue);margin-bottom:10px">📁 Supported Formats</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <span class="chip blue">Plain Text</span><span class="chip blue">PDF</span><span class="chip blue">Word Doc</span><span class="chip blue">Essay</span><span class="chip blue">Cover Letter</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div id="detector-result" class="card" style="margin-bottom:16px">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:16px">📊 Analysis Result</div>
+                <!-- AI Score Meter -->
+                <div style="text-align:center;margin-bottom:20px">
+                  <div style="position:relative;display:inline-block">
+                    <svg width="140" height="140" viewBox="0 0 140 140">
+                      <circle cx="70" cy="70" r="56" fill="none" stroke="#f1f5f9" stroke-width="12"/>
+                      <circle cx="70" cy="70" r="56" fill="none" stroke="url(#detGrad)" stroke-width="12"
+                        stroke-dasharray="352" stroke-dashoffset="105" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+                      <defs><linearGradient id="detGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#7c5cfc"/></linearGradient></defs>
+                    </svg>
+                    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--blue)">70%</div>
+                      <div style="font-size:10px;color:var(--text2);font-weight:600">AI PROBABILITY</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="background:linear-gradient(145deg,var(--amber-bg),#fef3c7);border:1.5px solid var(--amber-mid);border-radius:var(--r-sm);padding:12px;margin-bottom:10px">
+                  <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--amber);margin-bottom:4px">⚠️ Likely AI-Generated</div>
+                  <div style="font-size:12px;color:#92400e;line-height:1.5">High probability of AI-written content detected. Recommend humanizing before submission.</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 12px;background:var(--bg);border-radius:8px">
+                    <span style="color:var(--text2)">Sentence Structure</span><span style="color:var(--blue);font-weight:700">AI-like</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 12px;background:var(--bg);border-radius:8px">
+                    <span style="color:var(--text2)">Vocabulary Diversity</span><span style="color:var(--amber);font-weight:700">Moderate</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 12px;background:var(--bg);border-radius:8px">
+                    <span style="color:var(--text2)">Perplexity Score</span><span style="color:var(--green);font-weight:700">Low (AI)</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 12px;background:var(--bg);border-radius:8px">
+                    <span style="color:var(--text2)">Writing Style</span><span style="color:var(--blue);font-weight:700">Formal/AI</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── VOCAL SHIFT PANEL ─── -->
+        <div id="panel-vocal-shift" class="pb-panel" style="display:none">
+          <div class="section-head mb-16">
+            <div class="section-title">🎙️ Vocal Shift — Voice Lab</div>
+            <span class="chip teal">Live Analysis</span>
+          </div>
+          <div class="grid-2" style="gap:20px">
+            <div>
+              <!-- Waveform visualizer -->
+              <div style="background:linear-gradient(135deg,#0d9488,#0891b2);border-radius:var(--r);padding:24px;margin-bottom:16px;color:white;box-shadow:0 8px 24px rgba(13,148,136,0.25)">
+                <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:4px">🎙️ Voice Recorder</div>
+                <div style="font-size:12px;opacity:0.8;margin-bottom:20px">Speak naturally for 30 seconds for best analysis</div>
+                <!-- Fake waveform bars -->
+                <div style="display:flex;align-items:center;gap:3px;height:48px;margin-bottom:20px">
+                  <div style="flex:1;height:30%;background:rgba(255,255,255,0.4);border-radius:2px"></div>
+                  <div style="flex:1;height:60%;background:rgba(255,255,255,0.6);border-radius:2px"></div>
+                  <div style="flex:1;height:90%;background:rgba(255,255,255,0.9);border-radius:2px"></div>
+                  <div style="flex:1;height:70%;background:rgba(255,255,255,0.7);border-radius:2px"></div>
+                  <div style="flex:1;height:40%;background:rgba(255,255,255,0.5);border-radius:2px"></div>
+                  <div style="flex:1;height:80%;background:rgba(255,255,255,0.8);border-radius:2px"></div>
+                  <div style="flex:1;height:55%;background:rgba(255,255,255,0.65);border-radius:2px"></div>
+                  <div style="flex:1;height:95%;background:white;border-radius:2px"></div>
+                  <div style="flex:1;height:65%;background:rgba(255,255,255,0.7);border-radius:2px"></div>
+                  <div style="flex:1;height:35%;background:rgba(255,255,255,0.45);border-radius:2px"></div>
+                  <div style="flex:1;height:75%;background:rgba(255,255,255,0.8);border-radius:2px"></div>
+                  <div style="flex:1;height:50%;background:rgba(255,255,255,0.6);border-radius:2px"></div>
+                  <div style="flex:1;height:85%;background:rgba(255,255,255,0.85);border-radius:2px"></div>
+                  <div style="flex:1;height:45%;background:rgba(255,255,255,0.55);border-radius:2px"></div>
+                  <div style="flex:1;height:70%;background:rgba(255,255,255,0.75);border-radius:2px"></div>
+                  <div style="flex:1;height:30%;background:rgba(255,255,255,0.4);border-radius:2px"></div>
+                  <div style="flex:1;height:88%;background:rgba(255,255,255,0.88);border-radius:2px"></div>
+                  <div style="flex:1;height:60%;background:rgba(255,255,255,0.65);border-radius:2px"></div>
+                  <div style="flex:1;height:40%;background:rgba(255,255,255,0.5);border-radius:2px"></div>
+                  <div style="flex:1;height:75%;background:rgba(255,255,255,0.8);border-radius:2px"></div>
+                </div>
+                <div style="display:flex;gap:8px">
+                  <button class="btn" style="flex:1;justify-content:center;background:white;color:var(--teal);padding:11px;font-size:13px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:800;cursor:pointer">⏺ Record</button>
+                  <button class="btn" style="flex:1;justify-content:center;background:rgba(255,255,255,0.2);color:white;padding:11px;font-size:13px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">⏸ Pause</button>
+                  <button class="btn" style="flex:1;justify-content:center;background:rgba(255,255,255,0.2);color:white;padding:11px;font-size:13px;border:none;border-radius:var(--r-sm);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer">📊 Analyse</button>
+                </div>
+              </div>
+              <!-- Practice topics -->
+              <div class="card">
+                <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;margin-bottom:12px">📝 Practice Topics</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="padding:10px 12px;background:var(--teal-bg);border-radius:8px;border:1px solid var(--teal-mid);font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+                    <span>"Tell me about yourself"</span><span class="chip teal" style="font-size:10px">Easy</span>
+                  </div>
+                  <div style="padding:10px 12px;background:var(--amber-bg);border-radius:8px;border:1px solid var(--amber-mid);font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+                    <span>"Why should we hire you?"</span><span class="chip amber" style="font-size:10px">Medium</span>
+                  </div>
+                  <div style="padding:10px 12px;background:var(--red-bg);border-radius:8px;border:1px solid var(--red-mid);font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+                    <span>"Describe a failure & what you learned"</span><span class="chip red" style="font-size:10px">Hard</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <!-- Vocal metrics -->
+              <div class="card" style="margin-bottom:16px">
+                <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:16px">📊 Vocal Analysis Report</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+                  <div style="background:var(--teal-bg);border:1.5px solid var(--teal-mid);border-radius:var(--r-sm);padding:14px;text-align:center">
+                    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--teal)">82%</div>
+                    <div style="font-size:11px;color:var(--text2);margin-top:2px">Clarity</div>
+                  </div>
+                  <div style="background:var(--violet-bg);border:1.5px solid var(--violet-mid);border-radius:var(--r-sm);padding:14px;text-align:center">
+                    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--violet)">74%</div>
+                    <div style="font-size:11px;color:var(--text2);margin-top:2px">Confidence</div>
+                  </div>
+                  <div style="background:var(--blue-bg);border:1.5px solid var(--blue-mid);border-radius:var(--r-sm);padding:14px;text-align:center">
+                    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue)">138 <span style="font-size:13px">wpm</span></div>
+                    <div style="font-size:11px;color:var(--text2);margin-top:2px">Speaking Pace</div>
+                  </div>
+                  <div style="background:var(--amber-bg);border:1.5px solid var(--amber-mid);border-radius:var(--r-sm);padding:14px;text-align:center">
+                    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--amber)">4.2</div>
+                    <div style="font-size:11px;color:var(--text2);margin-top:2px">Filler Words/min</div>
+                  </div>
+                </div>
+                <div style="margin-bottom:10px">
+                  <div class="progress-head"><span style="font-size:12px">Pronunciation Accuracy</span><span class="progress-pct" style="color:var(--teal)">88%</span></div>
+                  <div class="progress-track" style="height:7px"><div class="progress-fill pf-teal" style="width:88%"></div></div>
+                </div>
+                <div>
+                  <div class="progress-head"><span style="font-size:12px">Tone Modulation</span><span class="progress-pct" style="color:var(--violet)">65%</span></div>
+                  <div class="progress-track" style="height:7px"><div class="progress-fill pf-violet" style="width:65%"></div></div>
+                </div>
+              </div>
+              <div class="ai-card">
+                <div class="ai-card-title">🤖 Vocal AI Recommendations</div>
+                <div class="ai-insight"><span class="ai-arrow">→</span>Reduce filler words ("um", "uh") — detected 4.2/min. Target below 1.5/min.</div>
+                <div class="ai-insight"><span class="ai-arrow">→</span>Speaking pace is slightly fast at 138 wpm. Slow to 110-120 wpm for better clarity.</div>
+                <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>Tone modulation (65%) needs improvement — vary your pitch more for engagement.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- ══ PERFORMANCE ══ -->
+      <div class="screen" id="screen-performance">
+        <div class="perf-hero mb-24">
+          <div>
+            <div style="font-size:11px;opacity:0.7;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Overall Skill Score</div>
+            <div class="perf-big-score">847</div>
+            <div class="perf-score-label">Top 15% globally · Rank #4,231 of 28,000</div>
+            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+              <span style="background:rgba(255,255,255,0.2);color:white;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700">↑ +34 this week</span>
+              <span style="background:rgba(255,255,255,0.2);color:white;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:700">SDE-1 Ready ✓</span>
+            </div>
+          </div>
+          <div class="perf-divider"></div>
+          <div class="perf-stats">
+            <div class="perf-mini">
+              <div class="ring-wrap">
+                <svg width="76" height="76" viewBox="0 0 76 76">
+                  <circle cx="38" cy="38" r="30" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="7"/>
+                  <circle cx="38" cy="38" r="30" fill="none" stroke="white" stroke-width="7"
+                    stroke-dasharray="188" stroke-dashoffset="47" stroke-linecap="round" transform="rotate(-90 38 38)"/>
+                </svg>
+                <div class="ring-label"><span class="ring-val" style="font-size:16px">75%</span></div>
+              </div>
+              <div style="font-size:11px;opacity:0.75;margin-top:6px;text-align:center">Completion</div>
+            </div>
+            <div class="perf-mini"><div class="perf-mini-val">88%</div><div class="perf-mini-label">Avg Score</div></div>
+            <div class="perf-mini"><div class="perf-mini-val">24h</div><div class="perf-mini-label">Study Time</div></div>
+            <div class="perf-mini"><div class="perf-mini-val">12🔥</div><div class="perf-mini-label">Day Streak</div></div>
+            <div class="perf-mini"><div class="perf-mini-val">3</div><div class="perf-mini-label">Weak Areas</div></div>
+          </div>
+        </div>
+
+        <!-- Colorful mini metric cards -->
+        <div class="grid-4 mb-24">
+          <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value">88%</div><div class="stat-label">Avg Test Score</div><div class="stat-trend">↑ +6% vs last month</div></div>
+          <div class="stat-card blue"><div class="stat-icon">⏱️</div><div class="stat-value">24h</div><div class="stat-label">Learning Time</div><div class="stat-trend">This month</div></div>
+          <div class="stat-card cyan"><div class="stat-icon">📖</div><div class="stat-value">62%</div><div class="stat-label">Course Completion</div><div class="stat-trend">On track</div></div>
+          <div class="stat-card orange"><div class="stat-icon">⚡</div><div class="stat-value">3</div><div class="stat-label">Weak Areas</div><div class="stat-trend">Action needed</div></div>
+        </div>
+
+        <div class="grid-2" style="gap:20px;margin-bottom:20px">
+          <div>
+            <div class="section-head"><div class="section-title">🎯 Skill Breakdown</div></div>
+            <div class="card">
+              <div class="progress-wrap"><div class="progress-head"><span>Python</span><span class="progress-pct" style="color:var(--violet)">88%</span></div><div class="progress-track" style="height:9px"><div class="progress-fill pf-violet" style="width:88%"></div></div></div>
+              <div class="progress-wrap"><div class="progress-head"><span>Aptitude</span><span class="progress-pct" style="color:var(--indigo)">81%</span></div><div class="progress-track" style="height:9px"><div class="progress-fill pf-indigo" style="width:81%"></div></div></div>
+              <div class="progress-wrap"><div class="progress-head"><span>DSA & Algorithms</span><span class="progress-pct" style="color:var(--teal)">72%</span></div><div class="progress-track" style="height:9px"><div class="progress-fill pf-teal" style="width:72%"></div></div></div>
+              <div class="progress-wrap"><div class="progress-head"><span>Java</span><span class="progress-pct" style="color:var(--blue)">55%</span></div><div class="progress-track" style="height:9px"><div class="progress-fill pf-blue" style="width:55%"></div></div></div>
+              <div class="progress-wrap" style="margin-bottom:0"><div class="progress-head"><span>System Design</span><span class="progress-pct" style="color:var(--red)">40%</span></div><div class="progress-track" style="height:9px"><div class="progress-fill pf-red" style="width:40%"></div></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="section-head"><div class="section-title">📅 60-Day Study Plan</div></div>
+            <div class="card" style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--teal-bg);border-radius:var(--r-sm);border:1.5px solid var(--teal-mid)">
+                <div style="font-size:18px">✅</div>
+                <div><div style="font-size:13px;font-weight:700;color:var(--teal)">Week 1-2: Arrays & Strings</div><div class="text-xs text-muted">Completed · 100%</div></div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--violet-bg);border-radius:var(--r-sm);border:1.5px solid var(--violet-mid)">
+                <div style="font-size:18px">🔄</div>
+                <div><div style="font-size:13px;font-weight:700;color:var(--violet)">Week 3-4: Trees & Graphs</div><div class="text-xs text-muted">In progress · 62%</div></div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--amber-bg);border-radius:var(--r-sm);border:1.5px solid var(--amber-mid);opacity:0.6">
+                <div style="font-size:18px">🔒</div>
+                <div><div style="font-size:13px;font-weight:700;color:var(--amber)">Week 5-6: Dynamic Programming</div><div class="text-xs text-muted">Starts Mar 8</div></div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;padding:10px;background:var(--blue-bg);border-radius:var(--r-sm);border:1.5px solid var(--blue-mid);opacity:0.6">
+                <div style="font-size:18px">🔒</div>
+                <div><div style="font-size:13px;font-weight:700;color:var(--blue)">Week 7-8: System Design</div><div class="text-xs text-muted">Starts Mar 22</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-title">🤖 AI Performance Insights & Recommendations</div>
+          <div class="grid-2" style="gap:16px">
+            <div>
+              <div class="ai-insight"><span class="ai-arrow">→</span>Python 88% — you're ready for the Python Certification test this week.</div>
+              <div class="ai-insight"><span class="ai-arrow">→</span>System Design gap is your biggest blocker for senior roles. Focus 30 min/day.</div>
+            </div>
+            <div>
+              <div class="ai-insight"><span class="ai-arrow">→</span>Top 15% globally — one more Global Test can push you to Top 10%.</div>
+              <div class="ai-insight" style="margin-bottom:0;padding-bottom:0;border-bottom:none"><span class="ai-arrow">→</span>3 job posts match your profile. Apply this week before they close.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ COMMUNITY ══ -->
+      <div class="screen" id="screen-community">
+        <div class="community-layout">
+          <div>
+            <div class="section-head mb-16">
+              <div class="section-title">👥 Community Feed</div>
+              <button class="btn btn-violet" style="padding:9px 16px;font-size:12px">+ New Post</button>
+            </div>
+            <div class="comm-post">
+              <div class="comm-user-row">
+                <div class="comm-avatar" style="background:linear-gradient(135deg,var(--violet),#a78bfa)">P</div>
+                <div><div class="comm-name">Priya Kumar</div><div class="comm-role">Python Developer · Top Contributor</div></div>
+                <div class="comm-time">2h ago</div>
+                <span class="chip violet" style="margin-left:8px">Blog</span>
+              </div>
+              <p class="comm-body">Just published my FAANG prep guide — 60 days, 3 offers. Arrays, Trees, DP, System Design, behaviorals. Full daily schedule inside. Link in bio! 🚀</p>
+              <div class="comm-actions"><span class="comm-action">❤️ 248</span><span class="comm-action">💬 42</span><span class="comm-action">🔗 Share</span><span class="comm-action connect">Follow Priya →</span></div>
+            </div>
+            <div class="comm-post">
+              <div class="comm-user-row">
+                <div class="comm-avatar" style="background:linear-gradient(135deg,var(--teal),#34d399)">R</div>
+                <div><div class="comm-name">Rahul Mehta</div><div class="comm-role">Backend Engineer · Startup Founder</div></div>
+                <div class="comm-time">5h ago</div>
+                <span class="chip teal" style="margin-left:8px">Collab</span>
+              </div>
+              <p class="comm-body">Building an AI-powered resume scanner. Need React + Node.js co-developer. Equity-based. MVP 80% done, launching in 3 weeks. DM me! 🤝</p>
+              <div class="comm-actions"><span class="comm-action">❤️ 34</span><span class="comm-action">💬 9</span><span class="comm-action">🔖 Save</span><span class="comm-action connect">Connect →</span></div>
+            </div>
+            <div class="comm-post">
+              <div class="comm-user-row">
+                <div class="comm-avatar" style="background:linear-gradient(135deg,var(--amber),#fbbf24)">S</div>
+                <div><div class="comm-name">Sneha Iyer</div><div class="comm-role">Data Scientist · ML Researcher</div></div>
+                <div class="comm-time">1d ago</div>
+                <span class="chip amber" style="margin-left:8px">Resource</span>
+              </div>
+              <p class="comm-body">Free resource drop 🎁 — 50 must-read ML papers in 2025. From transformers to diffusion models. Took me 2 months to compile. Go save it!</p>
+              <div class="comm-actions"><span class="comm-action">❤️ 512</span><span class="comm-action">💬 78</span><span class="comm-action">🔖 Save</span><span class="comm-action connect">Get Resources →</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="section-head mb-16"><div class="section-title">🏆 Leaderboard</div></div>
+            <div class="leaderboard-card">
+              <div class="lb-header"><div class="lb-title">🏅 Top Skill Scorers</div><div class="text-xs text-muted" style="margin-top:2px">This month · All fields</div></div>
+              <div class="lb-row"><div class="lb-rank gold">1</div><div class="lb-avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24)">A</div><div class="lb-info"><div class="lb-name">Arjun Singh</div><div class="lb-field">Full Stack</div></div><div class="lb-score">1,240</div></div>
+              <div class="lb-row"><div class="lb-rank silver">2</div><div class="lb-avatar" style="background:linear-gradient(135deg,var(--violet),#a78bfa)">P</div><div class="lb-info"><div class="lb-name">Priya Kumar</div><div class="lb-field">Python</div></div><div class="lb-score">1,180</div></div>
+              <div class="lb-row"><div class="lb-rank bronze">3</div><div class="lb-avatar" style="background:linear-gradient(135deg,var(--teal),#34d399)">R</div><div class="lb-info"><div class="lb-name">Rahul Mehta</div><div class="lb-field">Backend</div></div><div class="lb-score">1,054</div></div>
+              <div class="lb-row"><div class="lb-rank">4</div><div class="lb-avatar" style="background:linear-gradient(135deg,var(--pink),#f472b6)">S</div><div class="lb-info"><div class="lb-name">Sneha Iyer</div><div class="lb-field">ML / AI</div></div><div class="lb-score">988</div></div>
+              <div class="lb-row" style="background:var(--violet-bg);border-left:3px solid var(--violet)"><div class="lb-rank" style="color:var(--violet)">You</div><div class="lb-avatar" style="background:linear-gradient(135deg,var(--violet),var(--teal))">A</div><div class="lb-info"><div class="lb-name">Alex Kumar</div><div class="lb-field">Python · DSA</div></div><div class="lb-score">847</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ COLLABORATE ══ -->
+      <div class="screen" id="screen-collaborate">
+        <div class="grid-2" style="gap:20px">
+          <div>
+            <div class="section-head mb-16">
+              <div class="section-title">🤝 Collaborate</div>
+              <button class="btn btn-teal" style="padding:9px 16px;font-size:12px">+ Post Request</button>
+            </div>
+            <div class="collab-card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+                <div class="collab-title">AI Resume Scanner — SaaS MVP</div><span class="chip teal">Open</span>
+              </div>
+              <div class="collab-desc">Need React + Node.js dev. Equity-based. MVP 80% complete. Launch in 3 weeks. GPT-4 powered job matching.</div>
+              <div class="collab-tags"><span class="collab-tag">React</span><span class="collab-tag">Node.js</span><span class="collab-tag">OpenAI</span><span class="collab-tag">Equity</span></div>
+              <div class="collab-footer"><span>By Rahul Mehta · 5h ago</span><button class="btn btn-teal" style="padding:7px 14px;font-size:12px">Connect →</button></div>
+            </div>
+            <div class="collab-card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+                <div class="collab-title">EdTech B2B Skill Assessment Platform</div><span class="chip violet">Seeking</span>
+              </div>
+              <div class="collab-desc">Need backend engineer (Django/FastAPI) and UI/UX designer. Corporate training for SMBs. Seed round in progress.</div>
+              <div class="collab-tags"><span class="collab-tag">Python</span><span class="collab-tag">FastAPI</span><span class="collab-tag">UI/UX</span><span class="collab-tag">B2B</span></div>
+              <div class="collab-footer"><span>By Sneha Iyer · 1d ago</span><button class="btn btn-violet" style="padding:7px 14px;font-size:12px">Connect →</button></div>
+            </div>
+          </div>
+          <div>
+            <div class="section-head mb-16">
+              <div class="section-title">💼 Pitch & Jobs</div>
+              <span class="section-link">Post a job →</span>
+            </div>
+            <div class="card card-hover mb-16" style="border-color:var(--teal-mid);background:var(--teal-bg)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+                <div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:3px">Backend Engineer (Python)</div><div class="text-xs text-muted">TechCorp Inc. · Remote · ₹18-24 LPA</div></div>
+                <span class="chip teal">94% Match ⭐</span>
+              </div>
+              <div class="collab-tags"><span class="collab-tag">Python</span><span class="collab-tag">PostgreSQL</span><span class="collab-tag">Remote</span></div>
+              <button class="btn btn-teal btn-full" style="padding:10px;margin-top:10px">Apply Now →</button>
+            </div>
+            <div class="card card-hover" style="border-color:var(--amber-mid);background:var(--amber-bg)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+                <div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:3px">ML Engineer Intern</div><div class="text-xs text-muted">AI Startup · Bangalore · ₹35k/month</div></div>
+                <span class="chip amber">78% Match</span>
+              </div>
+              <div class="collab-tags"><span class="collab-tag">Python</span><span class="collab-tag">PyTorch</span><span class="collab-tag">MLOps</span></div>
+              <button class="btn btn-ghost btn-full" style="padding:10px;margin-top:10px">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ JOBS ══ -->
+      <div class="screen" id="screen-jobs">
+        <div class="section-head mb-20">
+          <div class="section-title">💼 AI-Matched Job Listings</div>
+          <span class="chip violet">🤖 AI Matched</span>
+        </div>
+        <div class="grid-2" style="gap:16px">
+          <div class="card card-hover" style="border-color:var(--teal-mid);background:linear-gradient(145deg,var(--teal-bg),white)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="chip teal">94% Match ⭐</span><span class="text-xs text-muted">2h ago</span></div>
+            <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:3px">Senior Python Developer</div>
+            <div class="text-sm text-muted mb-20">TechCorp Inc. · Remote · ₹18-24 LPA</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span class="collab-tag">Python</span><span class="collab-tag">FastAPI</span><span class="collab-tag">Remote</span></div>
+            <button class="btn btn-teal btn-full" style="padding:11px">Apply Now →</button>
+          </div>
+          <div class="card card-hover" style="border-color:var(--amber-mid);background:linear-gradient(145deg,var(--amber-bg),white)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="chip amber">78% Match</span><span class="text-xs text-muted">1d ago</span></div>
+            <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:3px">ML Engineer Intern</div>
+            <div class="text-sm text-muted mb-20">AI Startup · Bangalore · ₹35k/month</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span class="collab-tag">Python</span><span class="collab-tag">PyTorch</span><span class="collab-tag">MLOps</span></div>
+            <button class="btn btn-ghost btn-full" style="padding:11px">View Details</button>
+          </div>
+          <div class="card card-hover" style="border-color:var(--violet-mid);background:linear-gradient(145deg,var(--violet-bg),white)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="chip violet">65% Match</span><span class="text-xs text-muted">2d ago</span></div>
+            <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;margin-bottom:3px">Full Stack Developer</div>
+            <div class="text-sm text-muted mb-20">Product Co. · Hybrid · ₹12-16 LPA</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span class="collab-tag">React</span><span class="collab-tag">Node.js</span><span class="collab-tag">MongoDB</span></div>
+            <button class="btn btn-ghost btn-full" style="padding:11px">View Details</button>
+          </div>
+          <div class="card" style="background:linear-gradient(145deg,var(--blue-bg),white);border-color:var(--blue-mid);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;min-height:180px;cursor:pointer;text-align:center">
+            <div style="font-size:32px">🚀</div>
+            <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--blue)">Boost score to unlock more matches</div>
+            <button class="btn btn-blue" style="padding:9px 18px;font-size:12px">Improve Score →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CERTIFICATIONS ══ -->
+      <div class="screen" id="screen-certifications">
+        <div class="section-head mb-20">
+          <div class="section-title">🏆 Certifications & Badges</div>
+          <span class="section-link">Share to LinkedIn →</span>
+        </div>
+        <div class="grid-4 mb-24">
+          <div class="cert-card earned">
+            <div class="cert-icon">🐍</div>
+            <div class="cert-name">Python Professional</div>
+            <div class="cert-org">SkillSphere · Feb 2025</div>
+            <div class="cert-status earned">✓ Earned</div>
+            <button class="btn btn-teal" style="margin-top:12px;width:100%;justify-content:center;padding:9px;font-size:12px">Download PDF</button>
+          </div>
+          <div class="cert-card earned" style="background:linear-gradient(145deg,var(--blue-bg),#dbeafe);border-color:var(--blue-mid)">
+            <div class="cert-card" style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue),#60a5fa);border-radius:var(--r) var(--r) 0 0;padding:0"></div>
+            <div class="cert-icon">🧮</div>
+            <div class="cert-name">DSA Fundamentals</div>
+            <div class="cert-org">SkillSphere · Jan 2025</div>
+            <div class="cert-status" style="color:var(--blue)">✓ Earned</div>
+            <button class="btn btn-blue" style="margin-top:12px;width:100%;justify-content:center;padding:9px;font-size:12px">Download PDF</button>
+          </div>
+          <div class="cert-card earned" style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border-color:var(--violet-mid)">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--violet),#a78bfa);border-radius:var(--r) var(--r) 0 0"></div>
+            <div class="cert-icon">🎯</div>
+            <div class="cert-name">Aptitude Expert</div>
+            <div class="cert-org">SkillSphere · Dec 2024</div>
+            <div class="cert-status" style="color:var(--violet)">✓ Earned</div>
+            <button class="btn btn-violet" style="margin-top:12px;width:100%;justify-content:center;padding:9px;font-size:12px">Download PDF</button>
+          </div>
+          <div class="cert-card pending">
+            <div class="cert-icon">☕</div>
+            <div class="cert-name">Java Developer</div>
+            <div class="cert-org">SkillSphere · In Progress</div>
+            <div class="progress-track" style="margin:10px 0;background:var(--amber-mid)"><div class="progress-fill pf-amber" style="width:30%"></div></div>
+            <div class="cert-status pending">⏳ 30% — Keep going!</div>
+          </div>
+          <div class="cert-card locked"><div class="cert-icon" style="filter:grayscale(1);opacity:0.4">🌐</div><div class="cert-name" style="color:var(--text2)">System Design Pro</div><div class="cert-org">SkillSphere</div><div class="cert-status locked">🔒 Score 60%+ to unlock</div></div>
+          <div class="cert-card locked"><div class="cert-icon" style="filter:grayscale(1);opacity:0.4">🤖</div><div class="cert-name" style="color:var(--text2)">AI/ML Engineer</div><div class="cert-org">SkillSphere</div><div class="cert-status locked">🔒 Complete ML track</div></div>
+          <div class="cert-card locked"><div class="cert-icon" style="filter:grayscale(1);opacity:0.4">🦫</div><div class="cert-name" style="color:var(--text2)">Golang Expert</div><div class="cert-org">SkillSphere</div><div class="cert-status locked">🔒 Complete Golang track</div></div>
+          <div class="cert-card locked"><div class="cert-icon" style="filter:grayscale(1);opacity:0.4">👑</div><div class="cert-name" style="color:var(--text2)">Top 10% Global</div><div class="cert-org">SkillSphere</div><div class="cert-status locked">🔒 Reach Top 10%</div></div>
+        </div>
+
+        <div class="section-head mb-16"><div class="section-title">🎖️ Achievement Badges</div></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="background:linear-gradient(145deg,var(--orange-bg),var(--orange-mid));border:1.5px solid var(--orange-mid);border-radius:var(--r);padding:16px 20px;text-align:center;min-width:100px;box-shadow:var(--shadow)"><div style="font-size:28px;margin-bottom:6px">🔥</div><div style="font-size:12px;font-weight:700;color:var(--orange)">12-Day Streak</div></div>
+          <div style="background:linear-gradient(145deg,var(--violet-bg),var(--violet-mid));border:1.5px solid var(--violet-mid);border-radius:var(--r);padding:16px 20px;text-align:center;min-width:100px;box-shadow:var(--shadow)"><div style="font-size:28px;margin-bottom:6px">⭐</div><div style="font-size:12px;font-weight:700;color:var(--violet)">Top 15%</div></div>
+          <div style="background:linear-gradient(145deg,var(--teal-bg),var(--teal-mid));border:1.5px solid var(--teal-mid);border-radius:var(--r);padding:16px 20px;text-align:center;min-width:100px;box-shadow:var(--shadow)"><div style="font-size:28px;margin-bottom:6px">🚀</div><div style="font-size:12px;font-weight:700;color:var(--teal)">Early Adopter</div></div>
+          <div style="background:linear-gradient(145deg,var(--blue-bg),var(--blue-mid));border:1.5px solid var(--blue-mid);border-radius:var(--r);padding:16px 20px;text-align:center;min-width:100px;box-shadow:var(--shadow)"><div style="font-size:28px;margin-bottom:6px">🧠</div><div style="font-size:12px;font-weight:700;color:var(--blue)">Problem Solver</div></div>
+          <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 20px;text-align:center;min-width:100px;opacity:0.5"><div style="font-size:28px;margin-bottom:6px">👑</div><div style="font-size:12px;font-weight:600;color:var(--text3)">Top 10%</div></div>
+          <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 20px;text-align:center;min-width:100px;opacity:0.5"><div style="font-size:28px;margin-bottom:6px">💎</div><div style="font-size:12px;font-weight:600;color:var(--text3)">Elite Coder</div></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+const pageTitles = {
+  home:'Home Feed', training:'Training Zone', testing:'Testing System',
+  pitchbyte:'Pitch Byte — Communication Lab',
+  performance:'Performance Analyser', community:'Community',
+  collaborate:'Collaborate & Pitch', jobs:'Pitch & Jobs', certifications:'Certifications'
+};
+
+function showScreen(name, navEl) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const t = document.getElementById('screen-' + name);
+  if (t) t.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[name] || name;
+  if (navEl) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
+  if (name === 'pitchbyte') showPitchTab('mock-interview');
+  if (name === 'training') switchTrainingTab('programming', document.querySelector('#training-tabs .tab'));
+  if (name === 'testing') switchTestingTab('aptizone', document.querySelector('#testing-tabs .tab'));
+}
+
+/* ── Training tabs ── */
+const trainingTabs = ['programming','codezone','assignments','blogs','plugins','projects'];
+function switchTrainingTab(name, el) {
+  trainingTabs.forEach(t => {
+    const el2 = document.getElementById('ttab-' + t);
+    if (el2) el2.style.display = 'none';
+  });
+  const target = document.getElementById('ttab-' + name);
+  if (target) target.style.display = 'block';
+  if (el) {
+    el.closest('.tabs-wrap').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+}
+
+/* ── Testing tabs ── */
+const testingTabs = ['aptizone','yourtest','aibooster','globaltest'];
+function switchTestingTab(name, el) {
+  testingTabs.forEach(t => {
+    const el2 = document.getElementById('testab-' + t);
+    if (el2) el2.style.display = 'none';
+  });
+  const target = document.getElementById('testab-' + name);
+  if (target) target.style.display = 'block';
+  if (el) {
+    el.closest('.tabs-wrap').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+}
+
+/* ── Pitch Byte tabs ── */
+function showPitchTab(tab) {
+  ['mock-interview','personality','ai-detector','vocal-shift'].forEach(id => {
+    const p = document.getElementById('panel-' + id);
+    if (p) p.style.display = 'none';
+    const f = document.getElementById('ftab-' + id);
+    if (f) f.classList.remove('pb-active');
+  });
+  const panel = document.getElementById('panel-' + tab);
+  if (panel) panel.style.display = 'block';
+  const ftab = document.getElementById('ftab-' + tab);
+  if (ftab) ftab.classList.add('pb-active');
+}
+
+/* ── AI Detector simulate ── */
+function runAIDetector() {
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '⏳ Analysing...';
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 1800);
+}
+
+/* ── Waveform animation ── */
+function animateWave() {
+  const bars = document.querySelectorAll('.wave-bar');
+  bars.forEach(b => {
+    const h = 20 + Math.random() * 80;
+    b.style.height = h + '%';
+  });
+}
+let waveInterval = null;
+function toggleRecord(btn) {
+  if (waveInterval) {
+    clearInterval(waveInterval);
+    waveInterval = null;
+    btn.textContent = '⏺ Record';
+    btn.style.background = 'white';
+    btn.style.color = 'var(--teal)';
+  } else {
+    waveInterval = setInterval(animateWave, 150);
+    btn.textContent = '⏹ Stop';
+    btn.style.background = 'rgba(255,255,255,0.3)';
+    btn.style.color = 'white';
+  }
+}
+
+/* ── Auth ── */
+function showInterest() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('interestOverlay').style.display = 'flex';
+}
+function enterApp() {
+  document.getElementById('interestOverlay').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'flex';
+}
+
+/* ── Init ── */
+document.getElementById('loginOverlay').style.display = 'flex';
+
+// Hide all sub-tabs except first on load
+trainingTabs.slice(1).forEach(t => {
+  const el = document.getElementById('ttab-' + t);
+  if (el) el.style.display = 'none';
+});
+testingTabs.slice(1).forEach(t => {
+  const el = document.getElementById('testab-' + t);
+  if (el) el.style.display = 'none';
+});
+</script>
+</body>
+</html>
